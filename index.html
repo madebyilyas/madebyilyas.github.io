@@ -4,208 +4,395 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>MadeBYilyas — Web Developer</title>
-  <meta name="description" content="Web developer portfolio. I build fast, modern websites from your design or reference."/>
+  <meta name="description" content="I turn your design or a site you love into a fast, modern website. Pixel-perfect, SEO, performance."/>
   <meta name="theme-color" content="#0b0b12"/>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Spline Viewer -->
+  <!-- Spline viewer (3D) -->
   <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.71/build/spline-viewer.js"></script>
 
   <style>
-    /* Theme Tokens */
+    /* ========================
+       Theme Tokens
+    ========================= */
     :root{
       --bg:#0b0b12;
       --bg-2:#0a0a10;
-      --purple:#7c3aed;
-      --purple-600:#6d28d9;
-      --accent:#a855f7;
       --fg:#eef;
       --muted:#a5a2c7;
       --border:rgba(255,255,255,.08);
       --card:rgba(255,255,255,.05);
+      --purple:#7c3aed;
+      --purple-600:#6d28d9;
+      --accent:#a855f7;
       --radius:18px;
-      --shadow:0 24px 70px rgba(0,0,0,.55);
+      --shadow:0 24px 70px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.03);
       --max:1160px;
       --space:20px;
     }
 
+    /* ========================
+       Base
+    ========================= */
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;padding:0}
     body{
-      margin:0;padding:0;
-      font-family:Inter,system-ui,sans-serif;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--fg);
-      background:linear-gradient(180deg,var(--bg),var(--bg-2));
-      min-height:100vh;
-      scroll-behavior:smooth;
+      background:
+        radial-gradient(1200px 800px at -10% -10%, rgba(124,58,237,.18), transparent 60%),
+        radial-gradient(900px 700px at 110% 0%, rgba(168,85,247,.15), transparent 60%),
+        linear-gradient(180deg,var(--bg),var(--bg-2));
+      min-height:100vh; line-height:1.6; scroll-behavior:smooth;
     }
     a{color:inherit;text-decoration:none}
-
-    /* Header */
-    header{position:sticky;top:0;z-index:50;background:rgba(10,10,18,.6);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
-    .nav{max-width:var(--max);margin:0 auto;padding:0 var(--space);height:66px;display:flex;align-items:center;justify-content:space-between}
-    .links{display:flex;justify-content:space-between;flex:1;max-width:600px;margin:0 20px}
-    .links a{color:#d7d4ff}
-    .links a:hover{color:#fff}
+    img{max-width:100%;display:block}
+    .container{max-width:var(--max);margin:0 auto;padding:0 var(--space)}
+    .section{padding:82px 0}
+    .grid{display:grid;gap:var(--space)}
+    [id]{scroll-margin-top:84px}
+    .muted{color:var(--muted)}
 
     /* Buttons */
-    .btn{display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 1.2rem;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));font-weight:700;transition:all .25s ease}
-    .btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 0 20px rgba(168,85,247,.5)}
+    .btn{
+      display:inline-flex;align-items:center;gap:.6rem;
+      padding:.9rem 1.2rem;border-radius:12px;border:1px solid var(--border);
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      font-weight:700; transition:all .25s ease; position:relative; overflow:hidden
+    }
+    .btn::after{
+      content:""; position:absolute; inset:0;
+      background:radial-gradient(60% 140% at 50% 0%, rgba(168,85,247,.25), transparent 60%);
+      opacity:0; transition:opacity .25s ease;
+    }
+    .btn:hover{transform:translateY(-3px) scale(1.03); box-shadow:0 0 22px rgba(168,85,247,.45)}
+    .btn:hover::after{opacity:1}
     .btn.primary{border:0;background:linear-gradient(135deg,var(--accent),var(--purple-600));color:#fff}
     .btn.pill{border-radius:999px}
 
-    /* Hero */
-    .hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;max-width:var(--max);margin:0 auto;padding:80px var(--space);gap:40px;position:relative}
-    .headline{
-      font-size:clamp(30px,4vw,56px);font-weight:800;line-height:1.1;margin:0 0 16px;
-      background:linear-gradient(to bottom,#fff 0%,var(--accent) 100%);
-      -webkit-background-clip:text;background-clip:text;color:transparent;
+    /* Reveal */
+    .reveal{opacity:0; transform:translateY(28px); transition:opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1)}
+    .reveal.in{opacity:1; transform:none}
+
+    /* ========================
+       Header / Nav
+    ========================= */
+    header{
+      position:sticky; top:0; z-index:50;
+      background:rgba(10,10,18,.55); backdrop-filter:blur(8px);
+      border-bottom:1px solid var(--border)
     }
-    .sublead{font-size:1.1rem;color:#e4e1ff;max-width:500px}
-    .badges{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+    .nav{height:66px; display:flex; align-items:center; justify-content:space-between}
+    .brand{display:flex; align-items:center; gap:.6rem; font-weight:800}
+    .brand .dot{width:12px;height:12px;border-radius:50%;
+      background:conic-gradient(from 180deg,var(--purple),var(--accent),var(--purple));
+      box-shadow:0 0 26px rgba(168,85,247,.55)}
+    .links{display:flex; gap:16px; align-items:center}
+    .links a{color:#d7d4ff}
+    .links a:hover{color:#fff}
+    .nav-cta{display:flex; gap:10px}
+
+    /* Hamburger */
+    .burger{display:none; width:40px;height:40px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.04);
+      align-items:center;justify-content:center; cursor:pointer}
+    .burger span, .burger::before, .burger::after{
+      content:""; display:block; width:20px; height:2px; background:#e9e7ff; border-radius:2px; transition:transform .25s ease, opacity .25s ease
+    }
+    .burger::before{transform:translateY(-6px)}
+    .burger::after{transform:translateY(6px)}
+    .burger.active span{opacity:0}
+    .burger.active::before{transform:translateY(0) rotate(45deg)}
+    .burger.active::after{transform:translateY(0) rotate(-45deg)}
+
+    /* Mobile drawer */
+    .drawer{
+      position:fixed; inset:66px 0 auto 0; background:rgba(10,10,18,.96); backdrop-filter:blur(10px);
+      border-top:1px solid var(--border); transform:translateY(-12px); opacity:0; pointer-events:none;
+      transition:opacity .25s ease, transform .25s ease; padding:16px var(--space); display:flex; flex-direction:column; gap:12px;
+    }
+    .drawer.open{transform:none; opacity:1; pointer-events:auto}
+    .drawer a{padding:12px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.03)}
+
+    /* ========================
+       Hero
+    ========================= */
+    .hero{
+      display:grid; grid-template-columns:1.05fr .95fr; gap:28px; align-items:center;
+      padding:56px 0; position:relative
+    }
+    .headline{
+      font-size:clamp(30px,4vw,56px); font-weight:800; line-height:1.1; margin:0 0 12px;
+      background:linear-gradient(to bottom,#fff 0%, var(--accent) 100%);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .sublead{font-size:1.08rem; color:#e4e1ff; max-width:560px}
+    .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
     .chip{padding:.45rem .8rem;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--border)}
-    .cta-row{margin-top:20px;display:flex;gap:14px;flex-wrap:wrap}
-    .hero-3d{height:500px;position:relative}
-    spline-viewer{width:100%;height:100%}
+    .cta-row{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
 
-    /* Sections */
-    .section{padding:90px var(--space);max-width:var(--max);margin:0 auto}
-    .section h2{font-size:clamp(22px,2.4vw,34px);margin-bottom:16px}
-    .reveal{opacity:0;transform:translateY(40px);transition:all .7s cubic-bezier(.2,.8,.2,1)}
-    .reveal.in{opacity:1;transform:none}
+    /* 3D area — free, no border; fits nicely */
+    .hero-3d{
+      position:relative; min-height:460px; border-radius:var(--radius); overflow:hidden;
+    }
+    .hero-3d::before{
+      content:""; position:absolute; inset:-25%;
+      background:
+        radial-gradient(60% 80% at 30% 20%, rgba(168,85,247,.25), transparent 60%),
+        radial-gradient(60% 80% at 70% 80%, rgba(219,39,119,.22), transparent 60%);
+      filter:blur(22px); z-index:0;
+    }
+    spline-viewer{position:absolute; inset:0; width:100%; height:100%; z-index:1}
 
-    /* Cards */
-    .grid{display:grid;gap:20px}
-    .work{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-    .card{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);padding:20px;transition:transform .3s ease}
-    .card:hover{transform:translateY(-5px)}
-
-    /* Pricing */
-    .pricing{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-    .price .big{font-size:32px;font-weight:800;margin:8px 0}
+    /* ========================
+       Sections
+    ========================= */
+    .cards-12{grid-template-columns:repeat(12,1fr)}
+    .card{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow); padding:18px}
+    .work{grid-template-columns:repeat(3,1fr)}
+    .media{aspect-ratio:16/10;border-bottom:1px solid var(--border);
+      background:linear-gradient(135deg, rgba(124,58,237,.20), rgba(219,39,119,.18))}
+    .pricing{grid-template-columns:repeat(3,1fr)}
+    .price .big{font-size:32px;font-weight:800;margin:6px 0}
 
     /* Footer */
-    footer{padding:40px 0;text-align:center;color:var(--muted);border-top:1px solid var(--border)}
+    footer{padding:40px 0;color:var(--muted);border-top:1px solid var(--border);margin-top:40px;text-align:center}
 
-    @media(max-width:900px){
+    /* ========================
+       Responsive
+    ========================= */
+    @media (max-width: 980px){
+      .links,.nav-cta{display:none}
+      .burger{display:inline-flex}
       .hero{grid-template-columns:1fr}
-      .hero-3d{height:360px}
+      .hero-3d{min-height:360px; order:2}
+    }
+    @media (max-width: 560px){
+      .hero-3d{min-height:300px}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .btn,.reveal{transition:none}
     }
   </style>
 </head>
 <body>
-<header>
-  <div class="nav">
-    <div class="brand"><a href="#top"><b>MadeBYilyas</b></a></div>
-    <nav class="links">
+
+  <!-- =======================
+       HEADER
+  ======================== -->
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <span class="dot" aria-hidden="true"></span>
+        <a href="#top">MadeBYilyas</a>
+      </div>
+
+      <nav class="links" aria-label="Primary">
+        <a href="#work">Work</a>
+        <a href="#services">Services</a>
+        <a href="#process">Process</a>
+        <a href="#pricing">Pricing</a>
+        <a href="resume.pdf">Resume</a>
+      </nav>
+
+      <div class="nav-cta">
+        <a href="#contact" class="btn primary pill">Get a quote</a>
+      </div>
+
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <span></span>
+      </button>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="drawer" id="drawer">
       <a href="#work">Work</a>
       <a href="#services">Services</a>
       <a href="#process">Process</a>
       <a href="#pricing">Pricing</a>
       <a href="resume.pdf">Resume</a>
       <a href="#contact" class="btn primary pill">Get a quote</a>
-    </nav>
-  </div>
-</header>
+    </div>
+  </header>
 
-<main>
-  <!-- HERO -->
-  <section class="hero">
-    <div>
-      <h1 class="headline">Turning your ideas into websites that impress.</h1>
-      <p class="sublead">From Figma designs or reference sites, I craft responsive, SEO-friendly websites that convert visitors into clients.</p>
-      <div class="badges">
-        <span class="chip">⚡ Performance</span>
-        <span class="chip">🔎 SEO</span>
-        <span class="chip">📱 Responsive</span>
+  <!-- =======================
+       MAIN
+  ======================== -->
+  <main id="top" class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <!-- Text (left on desktop, top on mobile) -->
+      <div>
+        <span class="chip">Available for freelance</span>
+        <h1 class="headline">Turning your ideas into websites that impress.</h1>
+        <p class="sublead">I convert your Figma design or a site you love into a fast, modern, SEO-friendly website. Clean code. Clear results.</p>
+        <div class="badges">
+          <span class="chip">⚡ Performance</span>
+          <span class="chip">🔎 SEO</span>
+          <span class="chip">📱 Responsive</span>
+          <span class="chip">🧩 From Figma / reference</span>
+        </div>
+        <div class="cta-row">
+          <a class="btn primary pill" href="#contact">Start a project</a>
+          <a class="btn pill" href="#work">See recent work</a>
+        </div>
       </div>
-      <div class="cta-row">
-        <a href="#contact" class="btn primary">Start a project</a>
-        <a href="#work" class="btn">See recent work</a>
+
+      <!-- 3D (right on desktop, bottom on mobile) -->
+      <div class="hero-3d" id="hero3d" data-spline-url="https://prod.spline.design/haSlS2oO5Q2rKKWY/scene.splinecode">
+        <!-- إذا عندك روبوتك الخاص: بدّل data-spline-url برابط المشهد ديالك -->
+        <spline-viewer id="spline" url=""></spline-viewer>
+        <noscript style="position:absolute;inset:0;display:grid;place-items:center;color:#fff">
+          Enable JavaScript to view the 3D preview.
+        </noscript>
       </div>
-    </div>
-    <div class="hero-3d">
-      <!-- TODO: replace url with your robot scene -->
-      <spline-viewer url="https://prod.spline.design/undefined/scene.splinecode"></spline-viewer>
-    </div>
-  </section>
+    </section>
 
-  <!-- WORK -->
-  <section id="work" class="section reveal">
-    <h2>Recent Work</h2>
-    <div class="grid work">
-      <div class="card">Landing page project</div>
-      <div class="card">E-commerce speed optimization</div>
-      <div class="card">Company multi-page site</div>
-    </div>
-  </section>
-
-  <!-- SERVICES -->
-  <section id="services" class="section reveal">
-    <h2>Services</h2>
-    <div class="grid work">
-      <div class="card">🚀 Landing Pages that convert</div>
-      <div class="card">🧭 Website from design/reference</div>
-      <div class="card">⚡ Performance & SEO</div>
-    </div>
-  </section>
-
-  <!-- PROCESS -->
-  <section id="process" class="section reveal">
-    <h2>Process</h2>
-    <div class="grid work">
-      <div class="card">1. Brief</div>
-      <div class="card">2. Plan</div>
-      <div class="card">3. Build</div>
-      <div class="card">4. Launch</div>
-    </div>
-  </section>
-
-  <!-- PRICING -->
-  <section id="pricing" class="section reveal">
-    <h2>Pricing</h2>
-    <div class="grid pricing">
-      <div class="card price">
-        <h3>Starter</h3>
-        <div class="big">$149</div>
-        <p>1-page landing with SEO</p>
+    <!-- WORK -->
+    <section id="work" class="section reveal">
+      <h2>Recent Work</h2>
+      <p class="muted">A few examples — more on request.</p>
+      <div class="grid work">
+        <article class="card">
+          <div class="media" aria-label="Landing page preview"></div>
+          <h3>Conversion-focused Landing</h3>
+          <p class="muted">Next.js + Tailwind. 90+ Lighthouse. Analytics & A/B tests.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a class="btn" href="#" target="_blank" rel="noopener">Live</a>
+            <a class="btn" href="#" target="_blank" rel="noopener">Code</a>
+          </div>
+        </article>
+        <article class="card">
+          <div class="media" aria-label="E-commerce optimization"></div>
+          <h3>E-commerce Speed Upgrade</h3>
+          <p class="muted">Image optimization, SSR caching, code-splitting. LCP 5.4s → 1.8s.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a class="btn" href="#" target="_blank" rel="noopener">Live</a>
+            <a class="btn" href="#" target="_blank" rel="noopener">Code</a>
+          </div>
+        </article>
+        <article class="card">
+          <div class="media" aria-label="Company website"></div>
+          <h3>Company Website (Multi-page)</h3>
+          <p class="muted">CMS-ready structure, contact integrations & analytics.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a class="btn" href="#" target="_blank" rel="noopener">Live</a>
+            <a class="btn" href="#" target="_blank" rel="noopener">Code</a>
+          </div>
+        </article>
       </div>
-      <div class="card price">
-        <h3>Business</h3>
-        <div class="big">$499+</div>
-        <p>Multi-page websites, contact forms, performance optimization</p>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="section reveal">
+      <h2>Services</h2>
+      <div class="grid cards-12">
+        <div class="card" style="grid-column:span 12"><strong>🚀 Landing Pages that convert</strong><br><span class="muted">Copy + design + build focused on leads & sales.</span></div>
+        <div class="card" style="grid-column:span 12"><strong>🧭 Website from your design/reference</strong><br><span class="muted">Pixel-perfect from Figma or a website you like — legally & ethically.</span></div>
+        <div class="card" style="grid-column:span 12"><strong>⚡ Performance & SEO</strong><br><span class="muted">Core Web Vitals, accessibility, on-page SEO, analytics.</span></div>
       </div>
-      <div class="card price">
-        <h3>Custom</h3>
-        <div class="big">Get a quote</div>
-        <p>Web apps, dashboards, integrations</p>
+    </section>
+
+    <!-- PROCESS -->
+    <section id="process" class="section reveal">
+      <h2>Process</h2>
+      <div class="grid cards-12">
+        <div class="card" style="grid-column:span 3"><strong>1. Brief</strong><br><span class="muted">Share your design/reference + goals.</span></div>
+        <div class="card" style="grid-column:span 3"><strong>2. Plan</strong><br><span class="muted">Site map, sections, timeline & price.</span></div>
+        <div class="card" style="grid-column:span 3"><strong>3. Build</strong><br><span class="muted">Responsive, SEO, analytics.</span></div>
+        <div class="card" style="grid-column:span 3"><strong>4. Launch</strong><br><span class="muted">Deployment & handover.</span></div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CONTACT -->
-  <section id="contact" class="section reveal">
-    <h2>Let’s build your website</h2>
-    <a class="btn primary pill" href="mailto:ilyasjibbou01@gmail.com">Email me</a>
-    <a class="btn pill" href="https://wa.me/212600000000" target="_blank">WhatsApp</a>
-  </section>
-</main>
+    <!-- PRICING -->
+    <section id="pricing" class="section reveal">
+      <h2>Pricing</h2>
+      <div class="grid pricing">
+        <div class="card price">
+          <h3>Starter</h3>
+          <div class="big">$149</div>
+          <ul>
+            <li>1 page (landing)</li>
+            <li>From Figma or reference</li>
+            <li>Basic SEO & analytics</li>
+          </ul>
+          <div class="cta"><a class="btn primary pill" href="#contact">Choose Starter</a></div>
+        </div>
+        <div class="card price">
+          <h3>Business</h3>
+          <div class="big">$499+</div>
+          <ul>
+            <li>Multi-page website</li>
+            <li>Contact integration</li>
+            <li>Performance optimization</li>
+          </ul>
+          <div class="cta"><a class="btn primary pill" href="#contact">Choose Business</a></div>
+        </div>
+        <div class="card price">
+          <h3>Custom</h3>
+          <div class="big">Get a quote</div>
+          <ul>
+            <li>Web app / dashboard</li>
+            <li>Payment / API integration</li>
+            <li>Ongoing support</li>
+          </ul>
+          <div class="cta"><a class="btn primary pill" href="#contact">Tell me your idea</a></div>
+        </div>
+      </div>
+    </section>
 
-<footer>
-  <p>© <span id="y"></span> MadeBYilyas — Web Developer</p>
-</footer>
+    <!-- CONTACT -->
+    <section id="contact" class="section reveal">
+      <h2>Let’s build your website</h2>
+      <p class="muted">Send me your Figma or a website you like. I’ll reply with scope, price and timeline.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+        <a class="btn primary pill" href="mailto:ilyasjibbou01@gmail.com?subject=Website%20project%20from%20portfolio">Email me</a>
+        <a class="btn pill" href="https://wa.me/212600000000?text=Salam%20Ilyas%2C%20bghit%20website" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </section>
+  </main>
 
-<script>
-  // Year
-  document.getElementById('y').textContent = new Date().getFullYear();
+  <!-- =======================
+       FOOTER
+  ======================== -->
+  <footer>
+    <div class="container">© <span id="y"></span> MadeBYilyas — Web Developer</div>
+  </footer>
 
-  // Scroll reveal
-  const io=new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+  <!-- =======================
+       Scripts
+  ======================== -->
+  <script>
+    // Footer year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Mobile drawer
+    const burger = document.getElementById('burger');
+    const drawer = document.getElementById('drawer');
+    burger.addEventListener('click', ()=>{
+      const open = drawer.classList.toggle('open');
+      burger.classList.toggle('active', open);
+      burger.setAttribute('aria-expanded', open ? 'true':'false');
     });
-  },{threshold:.15});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-</script>
+    drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+      drawer.classList.remove('open'); burger.classList.remove('active'); burger.setAttribute('aria-expanded','false');
+    }));
+
+    // Reveal on scroll
+    const io=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    },{threshold:.15});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+    // Mount Spline robot (follow mouse scene)
+    const holder = document.getElementById('hero3d');
+    const viewer = document.getElementById('spline');
+    const sceneUrl = holder.getAttribute('data-spline-url'); // ← بدّل القيمة فالـHTML إذا عندك رابطك
+    if(sceneUrl){ viewer.setAttribute('url', sceneUrl); }
+  </script>
 </body>
 </html>
