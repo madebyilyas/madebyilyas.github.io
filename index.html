@@ -10,20 +10,22 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- Spline viewer (必須) -->
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.71/build/spline-viewer.js"></script>
+
   <style>
     :root{
       --bg:#0b0b12; --bg-2:#0a0a10; --fg:#eef;
       --muted:#a5a2c7; --border:rgba(255,255,255,.08);
       --card:rgba(255,255,255,.05); --purple:#7c3aed;
       --purple-600:#6d28d9; --accent:#a855f7;
-      --radius:18px; --shadow:0 24px 70px rgba(0,0,0,.55),
-       inset 0 0 0 1px rgba(255,255,255,.03);
+      --radius:18px; --shadow:0 24px 70px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.03);
       --max:1160px; --space:20px;
 
-      /* Robot tuning */
-      --robot-width: min(60vw, 720px);
-      --robot-height: 580px;      /* كان ~600px نقصناه ~20px */
-      --robot-scale: 1.0;         /* كبّر/صغّر بسهولة */
+      /* ضبط الروبوت */
+      --hero-h: clamp(520px, 60vh, 760px);
+      --viewer-shift: -6vw;   /* حرّك الروبوت شوية لليسار بصرياً */
+      --viewer-scale: 1.02;   /* كبّر/نقّص إذا بغيتي */
     }
 
     /* Base */
@@ -40,7 +42,7 @@
     }
     a{color:inherit;text-decoration:none}
     .container{max-width:var(--max);margin:0 auto;padding:0 var(--space)}
-    .section{padding: 25px 20px}
+    .section{padding:82px 0}
     .grid{display:grid;gap:var(--space)}
     [id]{scroll-margin-top:84px}
     .muted{color:var(--muted)}
@@ -49,7 +51,7 @@
     .btn{display:inline-flex;align-items:center;gap:.6rem;
       padding:.9rem 1.2rem;border-radius:12px;border:1px solid var(--border);
       background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
-      font-weight:700; transition:all .25s ease; position:relative; overflow:hidden}
+      font-weight:700; transition:.25s ease}
     .btn:hover{transform:translateY(-3px) scale(1.03); box-shadow:0 0 22px rgba(168,85,247,.45)}
     .btn.primary{border:0;background:linear-gradient(135deg,var(--accent),var(--purple-600));color:#fff}
     .btn.pill{border-radius:999px}
@@ -67,63 +69,46 @@
     .links a{color:#d7d4ff}
     .links a:hover{color:#fff}
     .nav-cta{display:flex; gap:10px}
-
-    /* Burger (SVG) */
-    .burger{display:none; width:40px;height:40px;
-      border:1px solid var(--border);border-radius:10px;
-      background:rgba(255,255,255,.04);align-items:center;
-      justify-content:center; cursor:pointer}
+    .burger{display:none; width:40px;height:40px;border:1px solid var(--border);border-radius:10px;
+      background:rgba(255,255,255,.04);align-items:center;justify-content:center; cursor:pointer}
     .burger svg{width:22px;height:22px;stroke:#e9e7ff}
-    .drawer{position:fixed; inset:66px 0 auto 0;
-      background:rgba(10,10,18,.96); backdrop-filter:blur(10px);
-      border-top:1px solid var(--border); transform:translateY(-12px);
-      opacity:0; pointer-events:none; transition:.25s ease;
-      padding:16px var(--space); display:flex; flex-direction:column; gap:12px}
+    .drawer{position:fixed; inset:66px 0 auto 0; background:rgba(10,10,18,.96); backdrop-filter:blur(10px);
+      border-top:1px solid var(--border); transform:translateY(-12px); opacity:0; pointer-events:none;
+      transition:.25s ease; padding:16px var(--space); display:flex; flex-direction:column; gap:12px}
     .drawer.open{transform:none; opacity:1; pointer-events:auto}
-    .drawer a{padding:12px;border:1px solid var(--border);
-      border-radius:12px;background:rgba(255,255,255,.03)}
+    .drawer a{padding:12px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.03)}
 
     /* HERO */
-    .hero{
-      position:relative;
-      padding:100px 0;
-      min-height: clamp(520px, 60vh, 760px);
-      overflow:hidden; /* باش ما يخرجش الروبوت */
+    .hero{position:relative; min-height:var(--hero-h); padding:90px 0; overflow:hidden}
+    /* viewer يغطي الهيرو كامل (باش يتبع الماوس فكل البانير) */
+    .hero-3d{
+      position:absolute; inset:0; z-index:1; display:block;
+      transform: translateX(var(--viewer-shift)) scale(var(--viewer-scale));
+      transform-origin: center left;
+    }
+    .hero-3d::part(scene){ /* تحسين جودة السكين */
+      image-rendering: auto;
     }
 
-    /* Robot overlay يغطي الهيرو كامل، بصرياً متموضع يمين */
-    .robot-overlay{
-      position:absolute; inset:0; z-index:1; display:flex; justify-content:flex-end; align-items:center;
-      pointer-events:auto; /* باش يتبع الماوس فالمساحة المفتوحة */
-    }
-    .robot-frame{
-      width:var(--robot-width);
-      height:var(--robot-height);
-      transform:scale(var(--robot-scale));
-      transform-origin:center right;
-      margin-right: clamp(0px, 6vw, 60px); /* مسافة بينو وبين النص */
-      border:0; border-radius:0;
-      box-shadow:none; overflow:hidden;
-    }
-    .robot-frame iframe{width:100%;height:100%;border:0;display:block}
-
-    /* Text content فوق الروبوت */
-    .hero-inner{
-      position:relative; z-index:2;
-      display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:40px;
-    }
+    /* محتوى النص على اليمين، فوق الروبوت */
+    .hero-inner{position:relative; z-index:2}
+    .hero-grid{display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center}
+    .hero-spacer{min-height:1px} /* عمود يسار (مكان الروبوت بصرياً) */
     .hero-content{
-      margin-left:30px; max-width:560px; justify-self:end; /* النص على اليمين */
-      text-align:left;
+      max-width:560px; margin-left:auto; text-align:left;
+      pointer-events:none; /* نخلي الأحداث تمر للـviewer باش يتبع الماوس */
+    }
+    /* رجّع التفاعل للأزرار/الروابط فقط */
+    .hero-content .btn, .hero-content a{pointer-events:auto}
+
+    .chip{
+      display:inline-block; padding:.45rem .8rem; border-radius:999px;
+      background:rgba(255,255,255,.05); border:1px solid var(--border)
     }
     .headline{
       font-size:clamp(32px,5vw,64px); font-weight:800; line-height:1.1; margin:6px 0 12px;
       background:linear-gradient(to bottom,#fff 0%, var(--accent) 100%);
       -webkit-background-clip:text; background-clip:text; color:transparent
-    }
-    .chip{
-      display:inline-block; padding:.45rem .8rem; border-radius:999px;
-      background:rgba(255,255,255,.05); border:1px solid var(--border)
     }
     .sublead{font-size:1.15rem; color:#e4e1ff}
     .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
@@ -168,19 +153,17 @@
       .burger{display:flex}
 
       .hero{padding:60px 0}
-      .hero-inner{grid-template-columns:1fr; gap:22px}
-      .hero-content{margin:0 auto; text-align:center; justify-self:center}
-      .robot-overlay{position:relative; inset:auto; order:2; justify-content:center}
-      .robot-frame{
-        width:min(92vw, 540px);
-        height:320px;      /* أصغر فالموبايل */
-        transform:scale(0.95);
-        margin:20px 0 0 0;
+      .hero-grid{grid-template-columns:1fr; gap:22px}
+      .hero-content{margin:0 auto; text-align:center; pointer-events:auto} /* فالـموبايل خليه قابل للنقر */
+      /* بدل وضعية الـviewer باش يجي تحت النص */
+      .hero-3d{
+        position:static; display:block; width:100%; height:320px;
+        transform:none; margin-top:18px;
       }
 
-      .work{grid-template-columns:1fr}            /* واحدة فوق وحدة بعرض كامل */
-      .pricing{grid-template-columns:1fr}         /* كارت وحدة فالسطَر */
-      .price{text-align:center}                   /* تمركز المحتوى */
+      .work{grid-template-columns:1fr}    /* واحدة فوق وحدة */
+      .pricing{grid-template-columns:1fr} /* واحدة فوق وحدة */
+      .price{text-align:center}
       .process-nav{justify-content:center}
     }
   </style>
@@ -216,31 +199,28 @@
 
   <!-- HERO -->
   <section class="hero">
-    <!-- Robot overlay (يغطي الهيرو، بصرياً على اليمين) -->
-    <div class="robot-overlay">
-      <div class="robot-frame">
-        <iframe 
-          src="https://my.spline.design/robotfollowcursorforlandingpage-ofxEJpEkL8mMbAsdQd0BWjff/" 
-          frameborder="0" allow="autoplay; fullscreen">
-        </iframe>
-      </div>
-    </div>
+    <!-- Viewer يغطي الهيرو كامل (يتبع الماوس فالبانير كامل) -->
+    <spline-viewer class="hero-3d"
+      url="https://prod.spline.design/NGdpJibjTqrOghDQ/scene.splinecode">
+    </spline-viewer>
 
-    <!-- نص الهيرو -->
+    <!-- النص على اليمين -->
     <div class="container hero-inner">
-      <div></div> <!-- عمود فارغ يسار باش النص يبقى يمين -->
-      <div class="hero-content">
-        <span class="chip">Hi, I'm Ilyas!</span>
-        <h1 class="headline">Turning your ideas into websites that impress.</h1>
-        <p class="sublead">I convert your Figma design or a site you love into a fast, modern, SEO-friendly website. Clean code. Clear results.</p>
-        <div class="badges">
-          <span class="chip">⚡ Performance</span>
-          <span class="chip">📱 Responsive</span>
-          <span class="chip">🧩 From Figma / reference</span>
-        </div>
-        <div class="cta-row">
-          <a class="btn primary pill" href="#contact">Start a project</a>
-          <a class="btn pill" href="#work">See recent work</a>
+      <div class="hero-grid">
+        <div class="hero-spacer"></div>
+        <div class="hero-content">
+          <span class="chip">Hi, I'm Ilyas!</span>
+          <h1 class="headline">Turning your ideas into websites that impress.</h1>
+          <p class="sublead">I convert your Figma design or a site you love into a fast, modern, SEO-friendly website. Clean code. Clear results.</p>
+          <div class="badges">
+            <span class="chip">⚡ Performance</span>
+            <span class="chip">📱 Responsive</span>
+            <span class="chip">🧩 From Figma / reference</span>
+          </div>
+          <div class="cta-row">
+            <a class="btn primary pill" href="#contact">Start a project</a>
+            <a class="btn pill" href="#work">See recent work</a>
+          </div>
         </div>
       </div>
     </div>
@@ -342,6 +322,7 @@
       <a class="btn pill" href="https://wa.me/212600000000?text=Salam%20Ilyas%2C%20bghit%20website" target="_blank">WhatsApp</a>
     </div>
   </section>
+
 </main>
 
 <footer><div class="container">© <span id="y"></span> MadeBYilyas — Web Developer</div></footer>
