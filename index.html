@@ -1,36 +1,55 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <!-- =======================
+       BASIC META / SEO
+  ======================== -->
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>MadeBYilyas — Web Developer</title>
-  <meta name="description" content="I build fast, modern websites for clients from Figma or a site you like. Pixel-perfect, SEO, and performance. Available for freelance."/>
+  <meta name="description" content="I build fast, modern websites from your Figma or a site you love. Pixel-perfect, SEO, performance. Available for freelance."/>
   <meta name="theme-color" content="#0b0b12"/>
+  <meta property="og:title" content="MadeBYilyas — Web Developer"/>
+  <meta property="og:description" content="Web developer for hire. From design/reference to a fast, modern website."/>
+  <meta property="og:type" content="website"/>
+
+  <!-- Font -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <!-- Spline viewer -->
+
+  <!-- Spline viewer (3D) -->
   <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.71/build/spline-viewer.js"></script>
 
+  <!-- =======================
+       THEME & STYLES
+  ======================== -->
   <style>
-    /* ===== Base / Tokens ===== */
-    *,*::before,*::after{box-sizing:border-box}
-    html,body{margin:0;padding:0}
+    /* -----------------------
+       0) THEME TOKENS
+       (بدّل الألوان بسهولة من هنا)
+    ------------------------ */
     :root{
-      --bg:#0b0b12;           /* near-black */
+      --bg:#0b0b12;
       --bg-2:#0a0a10;
-      --purple:#7c3aed;       /* primary */
+      --purple:#7c3aed;        /* Primary */
       --purple-600:#6d28d9;
-      --purple-300:#c4b5fd;
-      --accent:#a855f7;       /* gradients */
-      --pink:#db2777;
-      --fg:#eef;              /* text */
+      --accent:#a855f7;        /* Accent */
+      --pink:#db2777;          /* Secondary accent */
+      --fg:#eef;
       --muted:#a5a2c7;
       --border:rgba(255,255,255,.08);
       --card:rgba(255,255,255,.04);
       --radius:18px;
       --shadow:0 24px 70px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.03);
       --max:1160px;
+      --space:20px;
     }
+
+    /* -----------------------
+       1) BASE
+    ------------------------ */
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;padding:0}
     body{
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--fg);
@@ -40,22 +59,41 @@
         linear-gradient(180deg,var(--bg),var(--bg-2));
       min-height:100vh; line-height:1.6;
       -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      scroll-behavior:smooth;
     }
     a{color:inherit;text-decoration:none}
-    .container{max-width:var(--max);margin:0 auto;padding:0 20px}
+    img{max-width:100%;display:block}
+    .container{max-width:var(--max);margin:0 auto;padding:0 var(--space)}
     .section{padding:82px 0}
-    .grid{display:grid;gap:20px}
+    .grid{display:grid;gap:var(--space)}
+    .muted{color:var(--muted)}
+    .card{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+    .chip{padding:.45rem .7rem;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.03);color:#fff;opacity:.9}
+    /* Anchor offset for sticky header */
+    [id]{scroll-margin-top:90px}
 
+    /* Buttons */
     .btn{display:inline-flex;align-items:center;gap:.6rem;padding:.85rem 1.1rem;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));box-shadow:var(--shadow);font-weight:700}
     .btn:hover{transform:translateY(-2px)}
     .btn.primary{border:0;background:linear-gradient(180deg,var(--accent),var(--purple-600));color:#fff}
     .btn.ghost{background:transparent}
+    .btn.pill{border-radius:999px}
 
-    .chip{padding:.45rem .7rem;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.03);color:#fff;opacity:.9}
-    .muted{color:var(--muted)}
-    .card{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+    /* Headline gradient underline */
+    .headline{
+      font-size:clamp(28px,4vw,56px);line-height:1.08;margin:10px 0 14px;font-weight:800;
+      background:linear-gradient(180deg,#fff 60%, var(--accent) 100%);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .sublead{font-size:1.06rem;color:#e4e1ff}
 
-    /* ===== Header ===== */
+    /* Reveal on scroll */
+    .reveal{opacity:0;transform:translateY(12px);transition:opacity .6s ease, transform .6s ease}
+    .reveal.in{opacity:1;transform:none}
+
+    /* -----------------------
+       2) HEADER / NAV
+    ------------------------ */
     header{position:sticky;top:0;z-index:50;background:rgba(10,10,18,.55);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
     .nav{height:66px;display:flex;align-items:center;justify-content:space-between}
     .brand{display:flex;align-items:center;gap:.75rem;font-weight:800}
@@ -66,39 +104,46 @@
     .links a{color:#d7d4ff}
     .links a:hover{color:#fff}
 
-    /* ===== Hero ===== */
+    /* -----------------------
+       3) HERO
+    ------------------------ */
     .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center;padding:56px 0}
-    .hero .box{padding:28px;border-radius:var(--radius);border:1px solid var(--border);
-      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));box-shadow:var(--shadow)}
-    .hero h1{font-size:clamp(28px,4vw,56px);line-height:1.08;margin:10px 0 10px}
-    .hero p{font-size:1.06rem;color:#e4e1ff}
-    .hero .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .hero-content{ /* النص حرّ بلا إطار */
+      border:0;background:transparent;box-shadow:none;padding:0
+    }
+    .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .cta-row{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
 
-    .hero-right{position:relative;height:400px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);
-      background:linear-gradient(135deg, rgba(168,85,247,.18), rgba(219,39,119,.18))}
-    spline-viewer{position:absolute;inset:0;width:100%;height:100%}
+    /* Right visual (Spline) */
+    .hero-right{position:relative;height:420px;border-radius:var(--radius);overflow:hidden}
+    .hero-right::before{ /* subtle gradient glow behind the 3D */
+      content:"";position:absolute;inset:-20%;background:
+        radial-gradient(60% 80% at 30% 20%, rgba(168,85,247,.25), transparent 60%),
+        radial-gradient(60% 80% at 70% 80%, rgba(219,39,119,.22), transparent 60%);
+      filter:blur(20px);z-index:0
+    }
+    spline-viewer{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 
-    /* ===== Sections ===== */
-    .section h2{font-size:clamp(22px,2.4vw,34px);margin:0 0 14px}
-
-    /* Work */
+    /* -----------------------
+       4) WORK (Projects)
+    ------------------------ */
     .work{grid-template-columns:repeat(3,1fr)}
     .work .item{overflow:hidden}
     .media{aspect-ratio:16/10;border-bottom:1px solid var(--border);
       background:linear-gradient(135deg, rgba(124,58,237,.20), rgba(219,39,119,.18))}
     .item .body{padding:14px}
 
-    /* Services */
+    /* -----------------------
+       5) SERVICES / PROCESS / PRICING
+    ------------------------ */
     .service{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;padding:16px;border-radius:16px;border:1px solid var(--border);
       background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))}
     .service .icon{width:64px;height:64px;display:grid;place-items:center;border-radius:16px;
       background:linear-gradient(135deg, rgba(168,85,247,.28), rgba(219,39,119,.28));border:1px solid var(--border);font-size:26px}
 
-    /* Process */
     .cards-12{grid-template-columns:repeat(12,1fr)}
     .card.padded{padding:18px}
 
-    /* Pricing */
     .pricing{grid-template-columns:repeat(3,1fr)}
     .price{padding:20px}
     .price h3{margin:6px 0}
@@ -106,217 +151,243 @@
     .price ul{margin:12px 0 0;padding-left:18px}
     .price .cta{margin-top:14px}
 
-    /* Contact & Footer */
+    /* -----------------------
+       6) FOOTER
+    ------------------------ */
     footer{padding:40px 0;color:var(--muted);border-top:1px solid var(--border);margin-top:40px}
 
-    /* Reveal */
-    .reveal{opacity:0;transform:translateY(12px);transition:opacity .6s ease, transform .6s ease}
-    .reveal.in{opacity:1;transform:none}
-
+    /* -----------------------
+       7) RESPONSIVE + ACCESSIBILITY
+    ------------------------ */
     @media (max-width: 980px){
       .hero{grid-template-columns:1fr}
+      .hero-right{height:340px}
       .work,.pricing{grid-template-columns:1fr}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .btn{transition:none}
+      .reveal{transition:none}
     }
   </style>
 </head>
 <body>
-<header>
-  <div class="container nav">
-    <div class="brand"><span class="dot" aria-hidden="true"></span><a href="#top">MadeBYilyas</a></div>
-    <nav class="links" aria-label="Primary">
-      <a href="#work">Work</a>
-      <a href="#services">Services</a>
-      <a href="#process">Process</a>
-      <a href="#pricing">Pricing</a>
-      <a href="resume.pdf" class="btn ghost">Resume</a>
-      <a href="#contact" class="btn primary">Get a quote</a>
-    </nav>
-  </div>
-</header>
-
-<main id="top" class="container">
-  <!-- HERO -->
-  <section class="hero">
-    <div class="box">
-      <span class="chip">Available for freelance</span>
-      <h1>I build pixel-perfect websites from your design or a site you love.</h1>
-      <p>I convert Figma designs or reference websites into fast, modern, SEO-friendly sites. Clean code. Clear results.</p>
-      <div class="badges">
-        <span class="chip">⚡ Performance</span>
-        <span class="chip">🔎 SEO</span>
-        <span class="chip">📱 Responsive</span>
-        <span class="chip">🧩 From Figma / reference</span>
-      </div>
-      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn primary" href="#contact">Start a project</a>
-        <a class="btn" href="#work">See recent work</a>
-      </div>
+  <!-- =======================
+       HEADER
+  ======================== -->
+  <header>
+    <div class="container nav">
+      <div class="brand"><span class="dot" aria-hidden="true"></span><a href="#top">MadeBYilyas</a></div>
+      <nav class="links" aria-label="Primary">
+        <a href="#work">Work</a>
+        <a href="#services">Services</a>
+        <a href="#process">Process</a>
+        <a href="#pricing">Pricing</a>
+        <a href="resume.pdf" class="btn ghost pill">Resume</a>
+        <a href="#contact" class="btn primary pill">Get a quote</a>
+      </nav>
     </div>
+  </header>
 
-    <!-- Right banner with Spline -->
-    <div class="hero-right card">
-      <!-- Your Spline scene -->
-      <spline-viewer url="https://prod.spline.design/haSlS2oO5Q2rKKWY/scene.splinecode" loading-anim></spline-viewer>
-      <noscript style="position:absolute;inset:0;display:grid;place-items:center;color:#fff">
-        Enable JavaScript to view the 3D preview.
-      </noscript>
-    </div>
-  </section>
+  <!-- =======================
+       MAIN
+  ======================== -->
+  <main id="top" class="container">
 
-  <!-- WORK -->
-  <section id="work" class="section">
-    <h2>Recent Work</h2>
-    <p class="muted">A few examples — more on request.</p>
-    <div class="grid work">
-      <article class="card item reveal">
-        <div class="media"></div>
-        <div class="body">
-          <h3>Conversion-focused Landing</h3>
-          <p class="muted">Next.js + Tailwind. 90+ Lighthouse. Analytics & A/B tests.</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
-            <a class="btn" href="#" target="_blank" rel="noopener">Live</a>
-            <a class="btn" href="#" target="_blank" rel="noopener">Code</a>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <span class="chip">Available for freelance</span>
+        <h1 class="headline">I build pixel-perfect websites from your design or a site you love.</h1>
+        <p class="sublead">I convert Figma designs or reference websites into fast, modern, SEO-friendly sites. Clean code. Clear results.</p>
+        <div class="badges">
+          <span class="chip">⚡ Performance</span>
+          <span class="chip">🔎 SEO</span>
+          <span class="chip">📱 Responsive</span>
+          <span class="chip">🧩 From Figma / reference</span>
+        </div>
+        <div class="cta-row">
+          <a class="btn primary" href="#contact">Start a project</a>
+          <a class="btn" href="#work">See recent work</a>
+        </div>
+      </div>
+
+      <!-- Right banner: Spline 3D (NO borders) -->
+      <div class="hero-right">
+        <!-- TODO: تقدر تبدّل الرابط ديال المشهد بـ ديالك من Spline -->
+        <spline-viewer url="https://prod.spline.design/haSlS2oO5Q2rKKWY/scene.splinecode" loading-anim></spline-viewer>
+        <noscript style="position:absolute;inset:0;display:grid;place-items:center;color:#fff">
+          Enable JavaScript to view the 3D preview.
+        </noscript>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section id="work" class="section">
+      <h2>Recent Work</h2>
+      <p class="muted">A few examples — more on request.</p>
+      <div class="grid work">
+        <!-- TODO: بدّل الروابط والصور -->
+        <article class="card item reveal">
+          <div class="media" role="img" aria-label="Landing page preview"></div>
+          <div class="body">
+            <h3>Conversion-focused Landing</h3>
+            <p class="muted">Next.js + Tailwind. 90+ Lighthouse. Analytics & A/B tests.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+              <a class="btn" href="#" target="_blank" rel="noopener">Live</a>
+              <a class="btn" href="#" target="_blank" rel="noopener">Code</a>
+            </div>
+          </div>
+        </article>
+        <article class="card item reveal">
+          <div class="media" role="img" aria-label="E-commerce performance preview"></div>
+          <div class="body">
+            <h3>E-commerce Speed Upgrade</h3>
+            <p class="muted">Image optimization, SSR caching, code-splitting. LCP 5.4s → 1.8s.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+              <a class="btn" href="#" target="_blank" rel="noopener">Live</a>
+              <a class="btn" href="#" target="_blank" rel="noopener">Code</a>
+            </div>
+          </div>
+        </article>
+        <article class="card item reveal">
+          <div class="media" role="img" aria-label="Company website preview"></div>
+          <div class="body">
+            <h3>Company Website (Multi-page)</h3>
+            <p class="muted">CMS-ready structure, contact integrations & analytics.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+              <a class="btn" href="#" target="_blank" rel="noopener">Live</a>
+              <a class="btn" href="#" target="_blank" rel="noopener">Code</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="section">
+      <h2>Services</h2>
+      <div class="grid cards-12">
+        <div class="service card reveal" style="grid-column:span 12">
+          <div class="icon">🚀</div>
+          <div>
+            <h3>Landing Pages that convert</h3>
+            <p class="muted">Copy + design + build focused on leads & sales.</p>
           </div>
         </div>
-      </article>
-      <article class="card item reveal">
-        <div class="media"></div>
-        <div class="body">
-          <h3>E-commerce Speed Upgrade</h3>
-          <p class="muted">Image optimization, SSR caching, code-splitting. LCP 5.4s → 1.8s.</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
-            <a class="btn" href="#" target="_blank" rel="noopener">Live</a>
-            <a class="btn" href="#" target="_blank" rel="noopener">Code</a>
+        <div class="service card reveal" style="grid-column:span 12">
+          <div class="icon">🧭</div>
+          <div>
+            <h3>Website from your design/reference</h3>
+            <p class="muted">Pixel-perfect from Figma or a website you like — legally & ethically.</p>
           </div>
         </div>
-      </article>
-      <article class="card item reveal">
-        <div class="media"></div>
-        <div class="body">
-          <h3>Company Website (Multi-page)</h3>
-          <p class="muted">CMS-ready structure, contact integrations & analytics.</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
-            <a class="btn" href="#" target="_blank" rel="noopener">Live</a>
-            <a class="btn" href="#" target="_blank" rel="noopener">Code</a>
+        <div class="service card reveal" style="grid-column:span 12">
+          <div class="icon">⚡</div>
+          <div>
+            <h3>Performance & SEO</h3>
+            <p class="muted">Core Web Vitals, accessibility, on-page SEO, analytics.</p>
           </div>
         </div>
-      </article>
-    </div>
-  </section>
+      </div>
+    </section>
 
-  <!-- SERVICES -->
-  <section id="services" class="section">
-    <h2>Services</h2>
-    <div class="grid cards-12">
-      <div class="service card reveal" style="grid-column:span 12">
-        <div class="icon">🚀</div>
-        <div>
-          <h3>Landing Pages that convert</h3>
-          <p class="muted">Copy + design + build focused on leads & sales.</p>
+    <!-- PROCESS -->
+    <section id="process" class="section">
+      <h2>Process</h2>
+      <div class="grid cards-12">
+        <div class="card padded reveal" style="grid-column:span 3"><strong>1. Brief</strong><br><span class="muted">Share your design/reference + goals.</span></div>
+        <div class="card padded reveal" style="grid-column:span 3"><strong>2. Plan</strong><br><span class="muted">Site map, sections, timeline & price.</span></div>
+        <div class="card padded reveal" style="grid-column:span 3"><strong>3. Build</strong><br><span class="muted">Responsive, SEO, analytics.</span></div>
+        <div class="card padded reveal" style="grid-column:span 3"><strong>4. Launch</strong><br><span class="muted">Deployment & handover.</span></div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="section">
+      <h2>Pricing</h2>
+      <div class="grid pricing">
+        <!-- TODO: بدّل الثمن إذا بغيت MAD -->
+        <div class="card price reveal">
+          <h3>Starter</h3>
+          <div class="big">$149</div>
+          <ul>
+            <li>1 page (landing)</li>
+            <li>From Figma or reference</li>
+            <li>Basic SEO & analytics</li>
+          </ul>
+          <div class="cta"><a class="btn primary" href="#contact">Choose Starter</a></div>
+        </div>
+        <div class="card price reveal">
+          <h3>Business</h3>
+          <div class="big">$399</div>
+          <ul>
+            <li>Multi-page website</li>
+            <li>Contact integration</li>
+            <li>Performance optimization</li>
+          </ul>
+          <div class="cta"><a class="btn primary" href="#contact">Choose Business</a></div>
+        </div>
+        <div class="card price reveal">
+          <h3>Custom</h3>
+          <div class="big">Get a quote</div>
+          <ul>
+            <li>Web app / dashboard</li>
+            <li>Payment / API integration</li>
+            <li>Ongoing support</li>
+          </ul>
+          <div class="cta"><a class="btn primary" href="#contact">Tell me your idea</a></div>
         </div>
       </div>
-      <div class="service card reveal" style="grid-column:span 12">
-        <div class="icon">🧭</div>
-        <div>
-          <h3>Website from your design/reference</h3>
-          <p class="muted">Pixel-perfect from Figma or a website you like — legally & ethically.</p>
-        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <h2>Let’s build your website</h2>
+      <p class="muted">Send me your Figma or a website you like. I’ll reply with scope, price and timeline.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+        <!-- TODO: بدّل الإيميل -->
+        <a class="btn primary pill" href="mailto:ilyasjibbou01@gmail.com?subject=Website%20project%20from%20portfolio">Email me</a>
+        <!-- TODO: بدّل رقمك ب +2126... -->
+        <a class="btn pill" href="https://wa.me/212600000000?text=Salam%20Ilyas%2C%20bghit%20website" target="_blank" rel="noopener">WhatsApp</a>
       </div>
-      <div class="service card reveal" style="grid-column:span 12">
-        <div class="icon">⚡</div>
-        <div>
-          <h3>Performance & SEO</h3>
-          <p class="muted">Core Web Vitals, accessibility, on-page SEO, analytics.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
-  <!-- PROCESS -->
-  <section id="process" class="section">
-    <h2>Process</h2>
-    <div class="grid cards-12">
-      <div class="card padded reveal" style="grid-column:span 3"><strong>1. Brief</strong><br><span class="muted">Share your design/reference + goals.</span></div>
-      <div class="card padded reveal" style="grid-column:span 3"><strong>2. Plan</strong><br><span class="muted">Site map, sections, timeline & price.</span></div>
-      <div class="card padded reveal" style="grid-column:span 3"><strong>3. Build</strong><br><span class="muted">Responsive, SEO, analytics.</span></div>
-      <div class="card padded reveal" style="grid-column:span 3"><strong>4. Launch</strong><br><span class="muted">Deployment & handover.</span></div>
-    </div>
-  </section>
+  <!-- =======================
+       FOOTER
+  ======================== -->
+  <footer>
+    <div class="container">© <span id="y"></span> MadeBYilyas — Web Developer</div>
+  </footer>
 
-  <!-- PRICING -->
-  <section id="pricing" class="section">
-    <h2>Pricing</h2>
-    <div class="grid pricing">
-      <div class="card price reveal">
-        <h3>Starter</h3>
-        <div class="big">$149</div>
-        <ul>
-          <li>1 page (landing)</li>
-          <li>From Figma or reference</li>
-          <li>Basic SEO & analytics</li>
-        </ul>
-        <div class="cta"><a class="btn primary" href="#contact">Choose Starter</a></div>
-      </div>
-      <div class="card price reveal">
-        <h3>Business</h3>
-        <div class="big">$399</div>
-        <ul>
-          <li>Multi-page website</li>
-          <li>Contact integration</li>
-          <li>Performance optimization</li>
-        </ul>
-        <div class="cta"><a class="btn primary" href="#contact">Choose Business</a></div>
-      </div>
-      <div class="card price reveal">
-        <h3>Custom</h3>
-        <div class="big">Get a quote</div>
-        <ul>
-          <li>Web app / dashboard</li>
-          <li>Payment / API integration</li>
-          <li>Ongoing support</li>
-        </ul>
-        <div class="cta"><a class="btn primary" href="#contact">Tell me your idea</a></div>
-      </div>
-    </div>
-  </section>
+  <!-- =======================
+       JSON-LD (SEO)
+  ======================== -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"ProfessionalService",
+    "name":"MadeBYilyas",
+    "areaServed":"Worldwide",
+    "url":"https://madebyilyas.github.io",
+    "email":"mailto:ilyasjibbou01@gmail.com",
+    "sameAs":["https://github.com/madebyilyas","https://www.linkedin.com/in/madebyilyas/"],
+    "serviceType":["Landing pages","Company websites","Performance & SEO"]
+  }
+  </script>
 
-  <!-- CONTACT -->
-  <section id="contact" class="section">
-    <h2>Let’s build your website</h2>
-    <p class="muted">Send me your Figma or a website you like. I’ll reply with scope, price and timeline.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
-      <a class="btn primary" href="mailto:ilyasjibbou01@gmail.com?subject=Website%20project%20from%20portfolio">Email me</a>
-      <!-- TODO: حط رقمك مع +212 -->
-      <a class="btn" href="https://wa.me/212600000000?text=Salam%20Ilyas%2C%20bghit%20website" target="_blank" rel="noopener">WhatsApp</a>
-    </div>
-  </section>
-</main>
+  <!-- =======================
+       SCRIPTS
+  ======================== -->
+  <script>
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
 
-<footer>
-  <div class="container">© <span id="y"></span> MadeBYilyas — Web Developer</div>
-</footer>
-
-<!-- JSON-LD -->
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"ProfessionalService",
-  "name":"MadeBYilyas",
-  "areaServed":"Worldwide",
-  "url":"https://madebyilyas.github.io",
-  "email":"mailto:ilyasjibbou01@gmail.com",
-  "sameAs":["https://github.com/madebyilyas","https://www.linkedin.com/in/madebyilyas/"],
-  "serviceType":["Landing pages","Company websites","Performance & SEO"]
-}
-</script>
-
-<script>
-  // Year + reveal-on-scroll
-  document.getElementById('y').textContent = new Date().getFullYear();
-  const io = new IntersectionObserver((entries)=>entries.forEach(e=>{
-    if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
-  }),{threshold:.15});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-</script>
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries)=>entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    }),{threshold:.15});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  </script>
 </body>
 </html>
