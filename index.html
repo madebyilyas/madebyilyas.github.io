@@ -10,9 +10,6 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Spline viewer -->
-  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.71/build/spline-viewer.js"></script>
-
   <style>
     :root{
       --bg:#0b0b12; --bg-2:#0a0a10; --fg:#eef;
@@ -22,7 +19,14 @@
       --radius:18px; --shadow:0 24px 70px rgba(0,0,0,.55),
        inset 0 0 0 1px rgba(255,255,255,.03);
       --max:1160px; --space:20px;
+
+      /* Robot tuning */
+      --robot-width: min(60vw, 720px);
+      --robot-height: 580px;      /* كان ~600px نقصناه ~20px */
+      --robot-scale: 1.0;         /* كبّر/صغّر بسهولة */
     }
+
+    /* Base */
     *,*::before,*::after{box-sizing:border-box}
     html,body{margin:0;padding:0}
     body{
@@ -64,7 +68,7 @@
     .links a:hover{color:#fff}
     .nav-cta{display:flex; gap:10px}
 
-    /* Hamburger */
+    /* Burger (SVG) */
     .burger{display:none; width:40px;height:40px;
       border:1px solid var(--border);border-radius:10px;
       background:rgba(255,255,255,.04);align-items:center;
@@ -79,57 +83,124 @@
     .drawer a{padding:12px;border:1px solid var(--border);
       border-radius:12px;background:rgba(255,255,255,.03)}
 
-    /* Hero */
-    .hero{display:grid; grid-template-columns:1fr 1fr; align-items:center; padding:100px 0; position:relative}
-    .hero-content{position:relative; z-index:2; max-width:520px; margin-left:30px}
-    .headline{font-size:clamp(30px,4vw,56px); font-weight:800; line-height:1.1; margin:0 0 12px;
+    /* HERO */
+    .hero{
+      position:relative;
+      padding:100px 0;
+      min-height: clamp(520px, 60vh, 760px);
+      overflow:hidden; /* باش ما يخرجش الروبوت */
+    }
+
+    /* Robot overlay يغطي الهيرو كامل، بصرياً متموضع يمين */
+    .robot-overlay{
+      position:absolute; inset:0; z-index:1; display:flex; justify-content:flex-end; align-items:center;
+      pointer-events:auto; /* باش يتبع الماوس فالمساحة المفتوحة */
+    }
+    .robot-frame{
+      width:var(--robot-width);
+      height:var(--robot-height);
+      transform:scale(var(--robot-scale));
+      transform-origin:center right;
+      margin-right: clamp(0px, 6vw, 60px); /* مسافة بينو وبين النص */
+      border:0; border-radius:0;
+      box-shadow:none; overflow:hidden;
+    }
+    .robot-frame iframe{width:100%;height:100%;border:0;display:block}
+
+    /* Text content فوق الروبوت */
+    .hero-inner{
+      position:relative; z-index:2;
+      display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:40px;
+    }
+    .hero-content{
+      margin-left:30px; max-width:560px; justify-self:end; /* النص على اليمين */
+      text-align:left;
+    }
+    .headline{
+      font-size:clamp(32px,5vw,64px); font-weight:800; line-height:1.1; margin:6px 0 12px;
       background:linear-gradient(to bottom,#fff 0%, var(--accent) 100%);
-      -webkit-background-clip:text; background-clip:text; color:transparent}
-    .sublead{font-size:1.08rem; color:#e4e1ff; max-width:560px}
+      -webkit-background-clip:text; background-clip:text; color:transparent
+    }
+    .chip{
+      display:inline-block; padding:.45rem .8rem; border-radius:999px;
+      background:rgba(255,255,255,.05); border:1px solid var(--border)
+    }
+    .sublead{font-size:1.15rem; color:#e4e1ff}
     .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-    .chip{padding:.45rem .8rem;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--border)}
     .cta-row{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
-    .robot-3d {width:100%; height:600px; transform:scale(1.2); transform-origin:center right; margin-left: 60px;}
-    .robot-3d iframe {width:100%; height:100%; border:0;}
-    
+
     /* Sections */
     h2{font-size:2rem; margin-bottom:16px}
-    .cards-12{grid-template-columns:repeat(12,1fr)}
     .card{border:1px solid var(--border);border-radius:var(--radius);
       background:var(--card);box-shadow:var(--shadow); padding:18px}
-    .work{grid-template-columns:repeat(3,1fr)}
+
+    /* Work */
+    .work{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
     .media{aspect-ratio:16/10;border-bottom:1px solid var(--border);
       background:linear-gradient(135deg, rgba(124,58,237,.20), rgba(219,39,119,.18))}
-    .pricing{grid-template-columns:repeat(3,1fr)}
-    .price .big{font-size:32px;font-weight:800;margin:6px 0}
 
+    /* Process slider */
+    .process-wrap{position:relative}
+    .process-slider{
+      display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch; padding-bottom:8px;
+    }
+    .process-slider::-webkit-scrollbar{height:8px}
+    .process-slider::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:8px}
+    .slide{min-width:260px; scroll-snap-align:start}
+    .process-nav{display:flex; gap:8px; justify-content:flex-end; margin-top:10px}
+    .process-nav button{
+      width:38px;height:38px;border-radius:10px;border:1px solid var(--border);
+      background:rgba(255,255,255,.05); color:#fff; cursor:pointer
+    }
+
+    /* Pricing */
+    .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .price .big{font-size:32px;font-weight:800;margin:6px 0}
+    .price ul{margin:12px 0 0; padding-left:18px}
+
+    /* Footer */
     footer{padding:40px 0;color:var(--muted);border-top:1px solid var(--border);margin-top:40px;text-align:center}
 
+    /* Responsive */
     @media (max-width: 980px){
       .links,.nav-cta{display:none}
       .burger{display:flex}
-      .hero{grid-template-columns:1fr}
-      .hero-content{margin:auto; text-align:center}
-      .robot-3d{height:320px; order:2}
+
+      .hero{padding:60px 0}
+      .hero-inner{grid-template-columns:1fr; gap:22px}
+      .hero-content{margin:0 auto; text-align:center; justify-self:center}
+      .robot-overlay{position:relative; inset:auto; order:2; justify-content:center}
+      .robot-frame{
+        width:min(92vw, 540px);
+        height:320px;      /* أصغر فالموبايل */
+        transform:scale(0.95);
+        margin:20px 0 0 0;
+      }
+
+      .work{grid-template-columns:1fr}            /* واحدة فوق وحدة بعرض كامل */
+      .pricing{grid-template-columns:1fr}         /* كارت وحدة فالسطَر */
+      .price{text-align:center}                   /* تمركز المحتوى */
+      .process-nav{justify-content:center}
     }
   </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header>
   <div class="container nav">
-    <div class="brand"><span class="dot"></span><a href="#top">MadeBYilyas</a></div>
-    <nav class="links">
+    <div class="brand"><span class="dot" aria-hidden="true"></span><a href="#top">MadeBYilyas</a></div>
+    <nav class="links" aria-label="Primary">
       <a href="#work">Work</a><a href="#services">Services</a>
       <a href="#process">Process</a><a href="#pricing">Pricing</a>
       <a href="resume.pdf">Resume</a>
     </nav>
     <div class="nav-cta"><a href="#contact" class="btn primary pill">Get a quote</a></div>
     <button class="burger" id="burger" aria-label="Menu">
+      <!-- SVG hamburger -->
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
-        <line x1="3" y1="6" x2="21" y2="6"/>
-        <line x1="3" y1="12" x2="21" y2="12"/>
-        <line x1="3" y1="18" x2="21" y2="18"/>
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
       </svg>
     </button>
   </div>
@@ -141,40 +212,45 @@
   </div>
 </header>
 
-<main id="top" class="container">
+<main id="top">
+
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-content">
-      <span class="chip">Available for freelance</span>
-      <h1 class="headline">Turning your ideas into websites that impress.</h1>
-      <p class="sublead">I convert your Figma design or a site you love into a fast, modern, SEO-friendly website. Clean code. Clear results.</p>
-      <div class="badges">
-        <span class="chip">⚡ Performance</span>
-        <span class="chip">📱 Responsive</span>
-        <span class="chip">🧩 From Figma / reference</span>
-      </div>
-      <div class="cta-row">
-        <a class="btn primary pill" href="#contact">Start a project</a>
-        <a class="btn pill" href="#work">See recent work</a>
+    <!-- Robot overlay (يغطي الهيرو، بصرياً على اليمين) -->
+    <div class="robot-overlay">
+      <div class="robot-frame">
+        <iframe 
+          src="https://my.spline.design/robotfollowcursorforlandingpage-ofxEJpEkL8mMbAsdQd0BWjff/" 
+          frameborder="0" allow="autoplay; fullscreen">
+        </iframe>
       </div>
     </div>
-    
-    <div class="robot-3d">
-  <iframe 
-    src="https://my.spline.design/robotfollowcursorforlandingpage-ofxEJpEkL8mMbAsdQd0BWjff/" 
-    frameborder="0" 
-    width="100%" 
-    height="100%">
-  </iframe>
- </div>
 
-</section>
+    <!-- نص الهيرو -->
+    <div class="container hero-inner">
+      <div></div> <!-- عمود فارغ يسار باش النص يبقى يمين -->
+      <div class="hero-content">
+        <span class="chip">Hi, I'm Ilyas!</span>
+        <h1 class="headline">Turning your ideas into websites that impress.</h1>
+        <p class="sublead">I convert your Figma design or a site you love into a fast, modern, SEO-friendly website. Clean code. Clear results.</p>
+        <div class="badges">
+          <span class="chip">⚡ Performance</span>
+          <span class="chip">📱 Responsive</span>
+          <span class="chip">🧩 From Figma / reference</span>
+        </div>
+        <div class="cta-row">
+          <a class="btn primary pill" href="#contact">Start a project</a>
+          <a class="btn pill" href="#work">See recent work</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- WORK -->
-  <section id="work" class="section">
+  <section id="work" class="section container">
     <h2>Recent Work</h2>
     <p class="muted">Some selected projects that highlight speed, design, and conversions.</p>
-    <div class="grid work">
+    <div class="work">
       <article class="card">
         <div class="media"></div>
         <h3>Landing Page</h3>
@@ -194,65 +270,71 @@
   </section>
 
   <!-- SERVICES -->
-  <section id="services" class="section">
+  <section id="services" class="section container">
     <h2>Services</h2>
-    <div class="grid cards-12">
+    <div class="grid cards-12" style="grid-template-columns:repeat(12,1fr)">
       <div class="card" style="grid-column:span 12"><strong>🚀 Landing Pages</strong><br><span class="muted">Focused on conversions, built to impress.</span></div>
       <div class="card" style="grid-column:span 12"><strong>🧭 Websites from Design</strong><br><span class="muted">Pixel-perfect from your Figma or reference site.</span></div>
       <div class="card" style="grid-column:span 12"><strong>⚡ Performance & SEO</strong><br><span class="muted">Fast load, Core Web Vitals, analytics setup.</span></div>
     </div>
   </section>
 
-  <!-- PROCESS -->
-  <section id="process" class="section">
+  <!-- PROCESS (Slider) -->
+  <section id="process" class="section container">
     <h2>Process</h2>
-    <div class="grid cards-12">
-      <div class="card" style="grid-column:span 3"><strong>1. Brief</strong><br><span class="muted">Share your design or idea.</span></div>
-      <div class="card" style="grid-column:span 3"><strong>2. Plan</strong><br><span class="muted">Site map, structure, timeline.</span></div>
-      <div class="card" style="grid-column:span 3"><strong>3. Build</strong><br><span class="muted">Responsive, SEO-friendly code.</span></div>
-      <div class="card" style="grid-column:span 3"><strong>4. Launch</strong><br><span class="muted">Deploy and handover.</span></div>
+    <div class="process-wrap">
+      <div class="process-slider" id="processSlider" aria-label="Process steps">
+        <div class="card slide"><strong>1. Brief</strong><br><span class="muted">Share your design or idea + goals.</span></div>
+        <div class="card slide"><strong>2. Plan</strong><br><span class="muted">Site map, sections, timeline & price.</span></div>
+        <div class="card slide"><strong>3. Build</strong><br><span class="muted">Responsive, SEO-friendly, analytics.</span></div>
+        <div class="card slide"><strong>4. Launch</strong><br><span class="muted">Deployment & handover.</span></div>
+      </div>
+      <div class="process-nav">
+        <button type="button" id="prevProc" aria-label="Previous">‹</button>
+        <button type="button" id="nextProc" aria-label="Next">›</button>
+      </div>
     </div>
   </section>
 
   <!-- PRICING -->
-  <section id="pricing" class="section">
+  <section id="pricing" class="section container">
     <h2>Pricing</h2>
-    <div class="grid pricing">
-      <div class="card price">
+    <div class="pricing">
+      <div class="card price" style="text-align:center">
         <h3>Starter</h3>
         <div class="big">$149</div>
-        <ul>
+        <ul style="display:inline-block;text-align:left">
           <li>1 page landing</li>
           <li>From Figma or reference</li>
           <li>Basic SEO</li>
         </ul>
-        <div class="cta"><a class="btn primary pill" href="#contact">Choose Starter</a></div>
+        <div class="cta" style="margin-top:14px"><a class="btn primary pill" href="#contact">Choose Starter</a></div>
       </div>
-      <div class="card price">
+      <div class="card price" style="text-align:center">
         <h3>Business</h3>
         <div class="big">$499+</div>
-        <ul>
+        <ul style="display:inline-block;text-align:left">
           <li>Multi-page site</li>
           <li>Contact form integration</li>
           <li>Performance optimization</li>
         </ul>
-        <div class="cta"><a class="btn primary pill" href="#contact">Choose Business</a></div>
+        <div class="cta" style="margin-top:14px"><a class="btn primary pill" href="#contact">Choose Business</a></div>
       </div>
-      <div class="card price">
+      <div class="card price" style="text-align:center">
         <h3>Custom</h3>
         <div class="big">Get a quote</div>
-        <ul>
+        <ul style="display:inline-block;text-align:left">
           <li>Web app / dashboard</li>
           <li>API integrations</li>
           <li>Ongoing support</li>
         </ul>
-        <div class="cta"><a class="btn primary pill" href="#contact">Tell me your idea</a></div>
+        <div class="cta" style="margin-top:14px"><a class="btn primary pill" href="#contact">Tell me your idea</a></div>
       </div>
     </div>
   </section>
 
   <!-- CONTACT -->
-  <section id="contact" class="section">
+  <section id="contact" class="section container">
     <h2>Let’s build your website</h2>
     <p class="muted">Send me your Figma or a site you like, and I’ll reply with scope, price and timeline.</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
@@ -265,10 +347,20 @@
 <footer><div class="container">© <span id="y"></span> MadeBYilyas — Web Developer</div></footer>
 
 <script>
+  // Year
   document.getElementById('y').textContent = new Date().getFullYear();
-  const burger=document.getElementById('burger'), drawer=document.getElementById('drawer');
-  burger.addEventListener('click',()=>drawer.classList.toggle('open'));
-</script>
 
+  // Burger
+  const burger=document.getElementById('burger'), drawer=document.getElementById('drawer');
+  if(burger){ burger.addEventListener('click',()=>drawer.classList.toggle('open')); }
+
+  // Process slider controls
+  const slider = document.getElementById('processSlider');
+  const prev = document.getElementById('prevProc');
+  const next = document.getElementById('nextProc');
+  function slideBy(px){ slider.scrollBy({left:px, behavior:'smooth'}); }
+  prev.addEventListener('click', ()=>slideBy(-320));
+  next.addEventListener('click', ()=>slideBy(320));
+</script>
 </body>
 </html>
