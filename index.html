@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MadeBYilyas — Web Developer</title>
+  <meta name="description" content="Web developer building fast, modern websites and apps. Available for freelance work." />
+  <meta property="og:title" content="MadeBYilyas — Web Developer" />
+  <meta property="og:description" content="Web developer building fast, modern websites and apps." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ---- Reset / Base ---- */
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans",sans-serif;
+      color:var(--fg);
+      background: radial-gradient(1200px 800px at 10% -10%, rgba(37,99,235,.15), transparent 60%),
+                  radial-gradient(900px 600px at 110% 10%, rgba(249,115,22,.15), transparent 60%),
+                  linear-gradient(180deg, #0b1220 0%, #0a0f1a 100%);
+      min-height:100vh; line-height:1.6;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+    :root{
+      --orange:#f97316;           /* Orange 500 */
+      --orange-600:#ea580c;
+      --blue:#2563eb;             /* Blue 600 */
+      --blue-700:#1d4ed8;
+      --fg:#e6ecff;
+      --fg-dim:#c9d3ff;
+      --muted:#9aa5c4;
+      --card:#0f172a;
+      --card-2:#101828;
+      --border:rgba(255,255,255,.08);
+      --shadow:0 20px 60px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.03);
+      --radius:18px;
+      --max:1100px;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .container{width:100%;max-width:var(--max);margin-inline:auto;padding:0 20px}
+    .badge{display:inline-flex;gap:.5rem;align-items:center;padding:.35rem .7rem;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-size:.85rem;color:var(--fg-dim)}
+    .btn{
+      display:inline-flex;align-items:center;gap:.6rem;
+      padding:.85rem 1.1rem;border-radius:12px;border:1px solid var(--border);
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      color:var(--fg); font-weight:600; box-shadow:var(--shadow); transform:translateZ(0);
+      transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+      will-change:transform;
+    }
+    .btn:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(0,0,0,.5)}
+    .btn.primary{
+      background:linear-gradient(180deg, var(--blue), var(--blue-700));
+      border:0;
+    }
+    .btn.ghost{background:transparent}
+    .grid{display:grid;gap:20px}
+    .section{padding:72px 0}
+    hr.sep{border:0;border-top:1px solid var(--border);margin:40px 0}
+
+    /* ---- Nav ---- */
+    header{position:sticky;top:0;z-index:50;background:rgba(10,15,26,.6);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;align-items:center;gap:.75rem;font-weight:800;letter-spacing:.3px}
+    .brand .dot{width:12px;height:12px;border-radius:50%;
+      background:conic-gradient(from 180deg, var(--orange), var(--blue), var(--orange)); box-shadow:0 0 30px rgba(37,99,235,.4)}
+    .nav a{color:var(--fg-dim)}
+    .nav .links{display:flex;gap:16px;align-items:center}
+    .nav .links a:hover{color:#fff}
+
+    /* ---- Hero ---- */
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:28px;padding:56px 0}
+    .hero-card{
+      position:relative;border-radius:var(--radius);
+      background:
+        radial-gradient(600px 200px at 40% -10%, rgba(37,99,235,.25), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--border);
+      padding:28px; box-shadow:var(--shadow);
+      transform-style:preserve-3d; perspective:1000px;
+    }
+    .hero h1{font-size:clamp(28px, 4vw, 54px);margin:6px 0 8px;line-height:1.1;letter-spacing:.2px}
+    .hero p.lead{color:var(--fg-dim);font-size:1.05rem}
+    .tech-badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .hero-visual{
+      position:relative; min-height:360px; border-radius:var(--radius);
+      background:linear-gradient(135deg, rgba(249,115,22,.2), rgba(37,99,235,.2));
+      border:1px solid var(--border); box-shadow:var(--shadow); overflow:hidden;
+      transform:translateZ(0)
+    }
+    /* floating 3D-ish spheres */
+    .orb{position:absolute; border-radius:50%; filter:blur(2px); opacity:.85; will-change:transform}
+    .orb.o1{width:160px;height:160px;background:radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,.1) 40%, rgba(249,115,22,.8) 60%, transparent 70%); top:18%; left:8%; animation:float1 9s ease-in-out infinite}
+    .orb.o2{width:240px;height:240px;background:radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,.1) 35%, rgba(37,99,235,.85) 60%, transparent 72%); bottom:8%; right:5%; animation:float2 11s ease-in-out infinite}
+    .orb.o3{width:100px;height:100px;background:radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,.08) 30%, rgba(234,88,12,.9) 55%, transparent 70%); bottom:35%; right:42%; animation:float3 10s ease-in-out infinite}
+    @keyframes float1{50%{transform:translate(20px,-10px) scale(1.06)}}
+    @keyframes float2{50%{transform:translate(-20px,10px) scale(1.04)}}
+    @keyframes float3{50%{transform:translate(-10px,-20px) scale(1.1)}}
+
+    /* ---- Sections ---- */
+    .section h2{font-size:clamp(22px, 2.6vw, 34px); margin:0 0 16px}
+    .muted{color:var(--muted)}
+    .cards{grid-template-columns:repeat(12,1fr)}
+    .card{
+      grid-column:span 12; border:1px solid var(--border); border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      box-shadow:var(--shadow); overflow:hidden; position:relative; transform-style:preserve-3d;
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .card:hover{transform:translateY(-3px)}
+    .card-media{aspect-ratio:16/9; display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(135deg, rgba(37,99,235,.15), rgba(249,115,22,.15))}
+    .card-body{padding:18px}
+    .badge.tech{border-color:rgba(255,255,255,.12); color:#fff; background:linear-gradient(180deg, rgba(37,99,235,.2), rgba(37,99,235,.05))}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .actions .btn{padding:.55rem .8rem;font-size:.95rem}
+
+    /* ---- Services ---- */
+    .service{grid-column:span 12; display:grid; grid-template-columns:64px 1fr; gap:14px; padding:18px; border:1px solid var(--border); border-radius:16px; background:rgba(255,255,255,.03)}
+    .service .icon{width:64px;height:64px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg, rgba(249,115,22,.25), rgba(37,99,235,.25)); border:1px solid var(--border)}
+
+    /* ---- Stack ---- */
+    .stack{display:flex;flex-wrap:wrap;gap:10px}
+    .chip{padding:.5rem .7rem;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.02);color:var(--fg-dim)}
+
+    /* ---- Contact ---- */
+    .contact{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
+    .contact .panel{border:1px solid var(--border);border-radius:var(--radius);padding:20px;background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));box-shadow:var(--shadow)}
+
+    /* ---- Footer ---- */
+    footer{padding:40px 0;color:var(--muted);border-top:1px solid var(--border);margin-top:40px}
+
+    /* ---- 3D Tilt ---- */
+    [data-tilt]{transform-style:preserve-3d; perspective:1000px}
+    [data-tilt] .tilt-up{transform:translateZ(40px)}
+    [data-tilt] .tilt-mid{transform:translateZ(20px)}
+    [data-tilt] .tilt-low{transform:translateZ(10px)}
+
+    /* ---- Reveal ---- */
+    .reveal{opacity:0;transform:translateY(12px);transition:opacity .6s ease, transform .6s ease}
+    .reveal.in{opacity:1;transform:none}
+
+    /* ---- Responsive ---- */
+    @media (max-width: 980px){
+      .hero{grid-template-columns:1fr}
+      .contact{grid-template-columns:1fr}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .btn,.card{transition:none}
+      .orb{animation:none}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><span class="dot" aria-hidden="true"></span> <a href="#top">MadeBYilyas</a></div>
+      <nav class="links" aria-label="Primary">
+        <a href="#projects">Projects</a>
+        <a href="#services">Services</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a class="btn" href="resume.pdf" target="_blank" rel="noopener">Resume</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="container">
+    <!-- Hero -->
+    <section class="hero section">
+      <div class="hero-card" data-tilt>
+        <span class="badge tilt-up">Available for freelance</span>
+        <h1 class="tilt-up">I build blazing-fast websites that convert.</h1>
+        <p class="lead tilt-mid">I’m <strong>MadeBYilyas</strong>, a web developer focused on modern, accessible and SEO-friendly experiences using React, Next.js and Node.</p>
+        <div class="tech-badges tilt-low">
+          <span class="badge">⚡ Performance</span>
+          <span class="badge">🔎 SEO</span>
+          <span class="badge">📱 Responsive</span>
+        </div>
+        <div class="actions" style="margin-top:18px">
+          <a class="btn primary" href="#contact">Start a project</a>
+          <a class="btn ghost" href="#projects">See my work</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true" data-tilt>
+        <div class="orb o1"></div>
+        <div class="orb o2"></div>
+        <div class="orb o3"></div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="section">
+      <h2>Selected Projects</h2>
+      <p class="muted">Real-world work with live links and code.</p>
+      <div class="grid cards">
+        <!-- Project 1 -->
+        <article class="card reveal" data-tilt>
+          <div class="card-media">
+            <!-- placeholder SVG -->
+            <svg width="100%" height="100%" viewBox="0 0 800 450" role="img" aria-label="Landing page preview">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#2563eb"/>
+                  <stop offset="100%" stop-color="#f97316"/>
+                </linearGradient>
+              </defs>
+              <rect width="800" height="450" fill="url(#g1)" opacity=".2"/>
+              <g fill="none" stroke="white" stroke-opacity=".5">
+                <rect x="140" y="80" width="520" height="48" rx="8"/>
+                <rect x="140" y="150" width="300" height="18" rx="4"/>
+                <rect x="140" y="180" width="380" height="18" rx="4"/>
+                <rect x="140" y="210" width="440" height="18" rx="4"/>
+              </g>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>High-Converting SaaS Landing</h3>
+            <p class="muted">Next.js + Tailwind. 90+ Lighthouse. Built A/B test framework and analytics events.</p>
+            <div class="stack">
+              <span class="chip">Next.js</span><span class="chip">Tailwind</span><span class="chip">Vercel</span>
+            </div>
+            <div class="actions">
+              <a class="btn" href="https://example.com" target="_blank" rel="noopener">Live</a>
+              <a class="btn" href="https://github.com/you/project1" target="_blank" rel="noopener">Code</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="card reveal" data-tilt>
+          <div class="card-media"></div>
+          <div class="card-body">
+            <h3>E-commerce Speed Upgrade</h3>
+            <p class="muted">Reduced LCP from 5.4s → 1.8s by image optimization, SSR caching and code-splitting.</p>
+            <div class="stack">
+              <span class="chip">React</span><span class="chip">Node</span><span class="chip">Cloudflare</span>
+            </div>
+            <div class="actions">
+              <a class="btn" href="https://example-shop.com" target="_blank" rel="noopener">Live</a>
+              <a class="btn" href="https://github.com/you/project2" target="_blank" rel="noopener">Code</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 3 -->
+        <article class="card reveal" data-tilt>
+          <div class="card-media"></div>
+          <div class="card-body">
+            <h3>Startup Web App</h3>
+            <p class="muted">Full-stack CRUD app with role-based access and Stripe payments.</p>
+            <div class="stack">
+              <span class="chip">React</span><span class="chip">Express</span><span class="chip">Postgres</span>
+            </div>
+            <div class="actions">
+              <a class="btn" href="https://example-app.com" target="_blank" rel="noopener">Live</a>
+              <a class="btn" href="https://github.com/you/project3" target="_blank" rel="noopener">Code</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="section">
+      <h2>Services</h2>
+      <div class="grid">
+        <div class="service reveal">
+          <div class="icon">🚀</div>
+          <div>
+            <h3>Landing Pages that Convert</h3>
+            <p class="muted">Copy, design and implementation focused on sign-ups and sales.</p>
+          </div>
+        </div>
+        <div class="service reveal">
+          <div class="icon">⚙️</div>
+          <div>
+            <h3>Web Apps & Dashboards</h3>
+            <p class="muted">From idea to production with clean APIs and solid DX.</p>
+          </div>
+        </div>
+        <div class="service reveal">
+          <div class="icon">⚡</div>
+          <div>
+            <h3>Performance & SEO</h3>
+            <p class="muted">Core Web Vitals, accessibility, and on-page SEO best practices.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="section">
+      <h2>About</h2>
+      <p class="muted">I’m a web developer specializing in building fast, maintainable front-ends and pragmatic back-ends. I care about clean design, attention to detail and measurable results.</p>
+      <hr class="sep" />
+      <div class="stack">
+        <span class="chip">HTML5</span><span class="chip">CSS3</span><span class="chip">JavaScript</span>
+        <span class="chip">React</span><span class="chip">Next.js</span><span class="chip">Node.js</span>
+        <span class="chip">Tailwind</span><span class="chip">Express</span><span class="chip">PostgreSQL</span>
+        <span class="chip">Git</span><span class="chip">Cloudflare</span><span class="chip">Vercel</span>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section contact">
+      <div class="panel reveal">
+        <h2>Let’s build something</h2>
+        <p class="muted">Tell me about your project. I usually reply within 24 hours.</p>
+        <div class="actions" style="margin-top:10px">
+          <a class="btn primary" href="mailto:ilyasjibbou01@gmail.com?subject=Project%20Inquiry%20from%20Portfolio">Email me</a>
+          <a class="btn" href="https://calendly.com/" target="_blank" rel="noopener">Book a call</a>
+        </div>
+      </div>
+      <div class="panel reveal">
+        <h3>Quick facts</h3>
+        <ul>
+          <li>Timezone: Africa/Casablanca</li>
+          <li>Freelance: Available</li>
+          <li>Stack: React / Next.js / Node</li>
+          <li>Delivery: MVP in 1–2 weeks</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">© <span id="y"></span> MadeBYilyas — Built with HTML/CSS/JS</div>
+  </footer>
+
+  <!-- JSON-LD for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "MadeBYilyas",
+    "jobTitle": "Web Developer",
+    "url": "https://madebyilyas.github.io",
+    "email": "mailto:ilyasjibbou01@gmail.com",
+    "sameAs": ["https://github.com/madebyilyas","https://www.linkedin.com/in/madebyilyas/"]
+  }
+  </script>
+
+  <script>
+    // Footer year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // IntersectionObserver reveal
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+    },{threshold:.15});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+    // Lightweight 3D tilt on elements with [data-tilt]
+    const tiltEls = document.querySelectorAll('[data-tilt]');
+    tiltEls.forEach(el=>{
+      let rAF;
+      const rect = ()=>el.getBoundingClientRect();
+      const onMove = (e)=>{
+        const b = rect();
+        const px = (e.clientX - b.left)/b.width - .5;
+        const py = (e.clientY - b.top)/b.height - .5;
+        cancelAnimationFrame(rAF);
+        rAF = requestAnimationFrame(()=>{
+          el.style.transform = `rotateX(${(-py*6).toFixed(2)}deg) rotateY(${(px*8).toFixed(2)}deg) translateZ(0)`;
+        });
+      };
+      const reset = ()=>{ el.style.transform = 'rotateX(0) rotateY(0) translateZ(0)'; };
+      el.addEventListener('mousemove', onMove);
+      el.addEventListener('mouseleave', reset);
+      // subtle glow on hover
+      el.addEventListener('mouseenter', ()=>{ el.style.boxShadow = '0 34px 80px rgba(37,99,235,.25), 0 12px 30px rgba(249,115,22,.18)'; });
+      el.addEventListener('mouseleave', ()=>{ el.style.boxShadow = ''; });
+    });
+  </script>
+</body>
+</html>
