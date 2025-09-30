@@ -22,10 +22,9 @@
       --radius:18px; --shadow:0 24px 70px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.03);
       --max:1160px; --space:20px;
 
-      /* ضبط الروبوت */
       --hero-h: clamp(520px, 60vh, 760px);
-      --viewer-shift: -18vw;   /* حرّك الروبوت شوية لليسار بصرياً */
-      --viewer-scale: 1.02;   /* كبّر/نقّص إذا بغيتي */
+      --viewer-shift: -18vw;   
+      --viewer-scale: 1.02;  
     }
 
     /* Base */
@@ -80,17 +79,15 @@
 
     /* HERO */
     .hero{position:relative; min-height:var(--hero-h); padding:90px 0; overflow:hidden}
-    /* viewer يغطي الهيرو كامل (باش يتبع الماوس فكل البانير) */
     .hero-3d{
        position:absolute; inset:0; z-index:1;
        transform: translateX(var(--viewer-shift)) scale(var(--viewer-scale));
        transform-origin: center left;}
     
-    .hero-3d::part(scene){ /* تحسين جودة السكين */
+    .hero-3d::part(scene){ 
       image-rendering: auto;
     }
 
-    /* محتوى النص على اليمين، فوق الروبوت */
     .hero-inner{position:relative; z-index:2}
     .hero-grid{display:grid; grid-template-columns: 1.1fr 0.9fr; gap:32px; align-items:center}
     .hero-spacer{min-height:1px} 
@@ -140,31 +137,25 @@
     .price .big{font-size:32px;font-weight:800;margin:6px 0}
     .price ul{margin:12px 0 0; padding-left:18px}
 
-    /* Footer */
     footer{padding:40px 0;color:var(--muted);border-top:1px solid var(--border);margin-top:40px;text-align:center}
 
-    /* === Desktop only: text left, robot right, 50px left padding === */
 @media (min-width: 981px){
-  /* حرّك الروبوت لليمين وخليه يرتكز من اليمين */
-  :root { --viewer-shift: 18vw; }           /* بدّلناها من -18vw */
+
+  :root { --viewer-shift: 22vw; }     
   .hero-3d { transform-origin: center right; }
 
-  /* 50px فراغ من يسار الشاشة داخل الـhero فقط */
   .hero .container{ padding-right: var(--space); }
 
-  /* النص ياخد عرض أكثر من الروبوت */
   .hero-grid{ grid-template-columns: 1.2fr 0.8fr; }
 
-  /* النص فالعمود الأول (ليسار) وبعرض شوية أكبر */
   .hero-content{
     grid-column: 1;
-    max-width: 720px;                        /* زيدنا عرض النص شوية */
+    max-width: 720px;
     padding-left: 0;
     padding-right: clamp(12px, 3vw, 40px);
     text-align: left;
   }
 
-  /* الفراغ/العمود الثاني فاليمين قدّام الروبوت */
   .hero-spacer{ grid-column: 2; }
 }
 
