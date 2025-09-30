@@ -35,7 +35,6 @@
       min-height:100vh; line-height:1.6; scroll-behavior:smooth;
     }
     a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
     .container{max-width:var(--max);margin:0 auto;padding:0 var(--space)}
     .section{padding:82px 0}
     .grid{display:grid;gap:var(--space)}
@@ -47,11 +46,7 @@
       padding:.9rem 1.2rem;border-radius:12px;border:1px solid var(--border);
       background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
       font-weight:700; transition:all .25s ease; position:relative; overflow:hidden}
-    .btn::after{content:""; position:absolute; inset:0;
-      background:radial-gradient(60% 140% at 50% 0%, rgba(168,85,247,.25), transparent 60%);
-      opacity:0; transition:opacity .25s ease}
     .btn:hover{transform:translateY(-3px) scale(1.03); box-shadow:0 0 22px rgba(168,85,247,.45)}
-    .btn:hover::after{opacity:1}
     .btn.primary{border:0;background:linear-gradient(135deg,var(--accent),var(--purple-600));color:#fff}
     .btn.pill{border-radius:999px}
 
@@ -69,13 +64,12 @@
     .links a:hover{color:#fff}
     .nav-cta{display:flex; gap:10px}
 
-    /* Hamburger (SVG icon) */
+    /* Hamburger */
     .burger{display:none; width:40px;height:40px;
       border:1px solid var(--border);border-radius:10px;
       background:rgba(255,255,255,.04);align-items:center;
       justify-content:center; cursor:pointer}
     .burger svg{width:22px;height:22px;stroke:#e9e7ff}
-
     .drawer{position:fixed; inset:66px 0 auto 0;
       background:rgba(10,10,18,.96); backdrop-filter:blur(10px);
       border-top:1px solid var(--border); transform:translateY(-12px);
@@ -86,7 +80,8 @@
       border-radius:12px;background:rgba(255,255,255,.03)}
 
     /* Hero */
-    .hero{position:relative; padding:100px 0}
+    .hero{display:grid; grid-template-columns:1fr 1fr; align-items:center; padding:100px 0; position:relative}
+    .hero-content{position:relative; z-index:2; max-width:520px; margin-left:auto}
     .headline{font-size:clamp(30px,4vw,56px); font-weight:800; line-height:1.1; margin:0 0 12px;
       background:linear-gradient(to bottom,#fff 0%, var(--accent) 100%);
       -webkit-background-clip:text; background-clip:text; color:transparent}
@@ -94,16 +89,10 @@
     .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
     .chip{padding:.45rem .8rem;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--border)}
     .cta-row{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
-
-    /* Robot free-floating */
-    .robot-3d{
-      position:absolute; top:-28%; left:0;
-      width:100%; height:100%;
-      pointer-events:none; z-index:1;
-    }
-    .hero-content{position:relative; z-index:2; max-width:600px}
+    .robot-3d{width:100%; height:500px}
 
     /* Sections */
+    h2{font-size:2rem; margin-bottom:16px}
     .cards-12{grid-template-columns:repeat(12,1fr)}
     .card{border:1px solid var(--border);border-radius:var(--radius);
       background:var(--card);box-shadow:var(--shadow); padding:18px}
@@ -115,12 +104,12 @@
 
     footer{padding:40px 0;color:var(--muted);border-top:1px solid var(--border);margin-top:40px;text-align:center}
 
-    /* Responsive */
     @media (max-width: 980px){
       .links,.nav-cta{display:none}
       .burger{display:flex}
-      .hero{padding:60px 0}
-      .robot-3d{position:relative; top:0; height:320px; order:2}
+      .hero{grid-template-columns:1fr}
+      .hero-content{margin:auto; text-align:center}
+      .robot-3d{height:320px; order:2}
     }
   </style>
 </head>
@@ -136,7 +125,6 @@
     </nav>
     <div class="nav-cta"><a href="#contact" class="btn primary pill">Get a quote</a></div>
     <button class="burger" id="burger" aria-label="Menu">
-      <!-- SVG hamburger -->
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
         <line x1="3" y1="6" x2="21" y2="6"/>
         <line x1="3" y1="12" x2="21" y2="12"/>
@@ -155,6 +143,11 @@
 <main id="top" class="container">
   <!-- HERO -->
   <section class="hero">
+    <!-- Robot left -->
+    <spline-viewer class="robot-3d"
+      url="https://prod.spline.design/Qr2knMM4aKElH8x7/scene.splinecode">
+    </spline-viewer>
+    <!-- Content right -->
     <div class="hero-content">
       <span class="chip">Available for freelance</span>
       <h1 class="headline">Turning your ideas into websites that impress.</h1>
@@ -169,26 +162,105 @@
         <a class="btn pill" href="#work">See recent work</a>
       </div>
     </div>
-    <!-- Robot خلف النص -->
-    <spline-viewer class="robot-3d"
-      url="https://prod.spline.design/Qr2knMM4aKElH8x7/scene.splinecode">
-    </spline-viewer>
   </section>
 
-  <!-- باقي الأقسام Work / Services / Process / Pricing / Contact -->
-  <section id="work" class="section"><h2>Recent Work</h2><p class="muted">A few examples...</p></section>
-  <section id="services" class="section"><h2>Services</h2></section>
-  <section id="process" class="section"><h2>Process</h2></section>
-  <section id="pricing" class="section"><h2>Pricing</h2></section>
-  <section id="contact" class="section"><h2>Let’s build your website</h2></section>
+  <!-- WORK -->
+  <section id="work" class="section">
+    <h2>Recent Work</h2>
+    <p class="muted">Some selected projects that highlight speed, design, and conversions.</p>
+    <div class="grid work">
+      <article class="card">
+        <div class="media"></div>
+        <h3>Landing Page</h3>
+        <p class="muted">Conversion-focused design, optimized for performance.</p>
+      </article>
+      <article class="card">
+        <div class="media"></div>
+        <h3>E-commerce Optimization</h3>
+        <p class="muted">Boosted LCP from 5.4s → 1.8s with caching & image optimization.</p>
+      </article>
+      <article class="card">
+        <div class="media"></div>
+        <h3>Company Website</h3>
+        <p class="muted">Multi-page responsive site, SEO and analytics ready.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="section">
+    <h2>Services</h2>
+    <div class="grid cards-12">
+      <div class="card" style="grid-column:span 12"><strong>🚀 Landing Pages</strong><br><span class="muted">Focused on conversions, built to impress.</span></div>
+      <div class="card" style="grid-column:span 12"><strong>🧭 Websites from Design</strong><br><span class="muted">Pixel-perfect from your Figma or reference site.</span></div>
+      <div class="card" style="grid-column:span 12"><strong>⚡ Performance & SEO</strong><br><span class="muted">Fast load, Core Web Vitals, analytics setup.</span></div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" class="section">
+    <h2>Process</h2>
+    <div class="grid cards-12">
+      <div class="card" style="grid-column:span 3"><strong>1. Brief</strong><br><span class="muted">Share your design or idea.</span></div>
+      <div class="card" style="grid-column:span 3"><strong>2. Plan</strong><br><span class="muted">Site map, structure, timeline.</span></div>
+      <div class="card" style="grid-column:span 3"><strong>3. Build</strong><br><span class="muted">Responsive, SEO-friendly code.</span></div>
+      <div class="card" style="grid-column:span 3"><strong>4. Launch</strong><br><span class="muted">Deploy and handover.</span></div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="section">
+    <h2>Pricing</h2>
+    <div class="grid pricing">
+      <div class="card price">
+        <h3>Starter</h3>
+        <div class="big">$149</div>
+        <ul>
+          <li>1 page landing</li>
+          <li>From Figma or reference</li>
+          <li>Basic SEO</li>
+        </ul>
+        <div class="cta"><a class="btn primary pill" href="#contact">Choose Starter</a></div>
+      </div>
+      <div class="card price">
+        <h3>Business</h3>
+        <div class="big">$499+</div>
+        <ul>
+          <li>Multi-page site</li>
+          <li>Contact form integration</li>
+          <li>Performance optimization</li>
+        </ul>
+        <div class="cta"><a class="btn primary pill" href="#contact">Choose Business</a></div>
+      </div>
+      <div class="card price">
+        <h3>Custom</h3>
+        <div class="big">Get a quote</div>
+        <ul>
+          <li>Web app / dashboard</li>
+          <li>API integrations</li>
+          <li>Ongoing support</li>
+        </ul>
+        <div class="cta"><a class="btn primary pill" href="#contact">Tell me your idea</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section">
+    <h2>Let’s build your website</h2>
+    <p class="muted">Send me your Figma or a site you like, and I’ll reply with scope, price and timeline.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+      <a class="btn primary pill" href="mailto:ilyasjibbou01@gmail.com">Email me</a>
+      <a class="btn pill" href="https://wa.me/212600000000?text=Salam%20Ilyas%2C%20bghit%20website" target="_blank">WhatsApp</a>
+    </div>
+  </section>
 </main>
 
 <footer><div class="container">© <span id="y"></span> MadeBYilyas — Web Developer</div></footer>
 
 <script>
   document.getElementById('y').textContent = new Date().getFullYear();
-  const burger=document.getElementById('burger'),
-        drawer=document.getElementById('drawer');
+  const burger=document.getElementById('burger'), drawer=document.getElementById('drawer');
   burger.addEventListener('click',()=>drawer.classList.toggle('open'));
 </script>
 
