@@ -59,7 +59,7 @@
     .brand .dot{width:12px;height:12px;border-radius:50%;
       background:conic-gradient(from 180deg,var(--purple),var(--accent),var(--purple));
       box-shadow:0 0 26px rgba(168,85,247,.55)}
-    .links{display:flex; gap:16px; align-items:center}
+    .links{display:flex; gap:26px; align-items:center}
     .links a{color:#d7d4ff}
     .links a:hover{color:#fff}
     .nav-cta{display:flex; gap:10px}
@@ -89,7 +89,7 @@
     .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
     .chip{padding:.45rem .8rem;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--border)}
     .cta-row{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
-    .robot-3d{width:100%; height:500px}
+    .robot-3d { width:100%; height:500px; transform:scale(1.2); transform-origin:center right;}
 
     /* Sections */
     h2{font-size:2rem; margin-bottom:16px}
@@ -143,11 +143,6 @@
 <main id="top" class="container">
   <!-- HERO -->
   <section class="hero">
-    <!-- Robot left -->
-    <spline-viewer class="robot-3d"
-      url="https://prod.spline.design/Qr2knMM4aKElH8x7/scene.splinecode">
-    </spline-viewer>
-    <!-- Content right -->
     <div class="hero-content">
       <span class="chip">Available for freelance</span>
       <h1 class="headline">Turning your ideas into websites that impress.</h1>
@@ -162,6 +157,10 @@
         <a class="btn pill" href="#work">See recent work</a>
       </div>
     </div>
+    
+    <spline-viewer class="robot-3d"
+      url="https://prod.spline.design/Qr2knMM4aKElH8x7/scene.splinecode">
+    </spline-viewer>
   </section>
 
   <!-- WORK -->
