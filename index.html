@@ -161,23 +161,50 @@
 
     /* Responsive */
     @media (max-width: 980px){
-      .links,.nav-cta{display:none}
-      .burger{display:flex}
+  /* Nav */
+  .links,.nav-cta{display:none}
+  .burger{display:flex}
 
-      .hero{padding:60px 0}
-      .hero-grid{grid-template-columns:1fr; gap:22px}
-      .hero-content{margin:0 auto; text-align:center; pointer-events:auto} /* فالـموبايل خليه قابل للنقر */
-      /* بدل وضعية الـviewer باش يجي تحت النص */
-      .hero-3d{
-        position:static; display:block; width:100%; height:320px;
-        transform:none; margin-top:18px;
-      }
+  .section{ padding: 60px var(--space); }
 
-      .work{grid-template-columns:1fr}    /* واحدة فوق وحدة */
-      .pricing{grid-template-columns:1fr} /* واحدة فوق وحدة */
-      .price{text-align:center}
-      .process-nav{justify-content:center}
-    }
+  :root{
+    --hero-h: clamp(560px, 82vh, 780px); 
+    --viewer-shift: 0;                  
+    --viewer-scale: 1;                  
+  }
+
+  .hero{
+    padding: 60px 0;
+    overflow: hidden;                
+  }
+
+  .hero-inner{ position: relative; z-index: 2; }
+  .hero-grid{ grid-template-columns: 1fr; gap: 22px; }
+  .hero-content{
+    margin: 0 auto;
+    text-align: center;
+    pointer-events: auto;
+    max-width: 680px;
+    padding: 0 var(--space);         
+  }
+
+  .hero-3d{
+    position: absolute !important;
+    inset: 0 !important;
+    transform: translateX(var(--viewer-shift)) scale(var(--viewer-scale));
+    transform-origin: center center;
+    margin: 0 !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  /* Grids */
+  .work{grid-template-columns:1fr}
+  .pricing{grid-template-columns:1fr}
+  .price{text-align:center}
+  .process-nav{justify-content:center}
+}
+
   </style>
 </head>
 <body>
