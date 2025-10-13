@@ -10,7 +10,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Spline viewer (必須) -->
+  <!-- Spline viewer -->
   <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.71/build/spline-viewer.js"></script>
 
   <style>
@@ -27,7 +27,6 @@
       --viewer-scale: 1.02;  
     }
 
-    /* Base */
     *,*::before,*::after{box-sizing:border-box}
     html,body{margin:0;padding:0}
     body{
@@ -46,7 +45,6 @@
     [id]{scroll-margin-top:84px}
     .muted{color:var(--muted)}
 
-    /* Buttons */
     .btn{display:inline-flex;align-items:center;gap:.6rem;
       padding:.9rem 1.2rem;border-radius:12px;border:1px solid var(--border);
       background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
@@ -55,7 +53,6 @@
     .btn.primary{border:0;background:linear-gradient(135deg,var(--accent),var(--purple-600));color:#fff}
     .btn.pill{border-radius:999px}
 
-    /* Header */
     header{position:sticky; top:0; z-index:50;
       background:rgba(10,10,18,.55); backdrop-filter:blur(8px);
       border-bottom:1px solid var(--border)}
@@ -77,16 +74,12 @@
     .drawer.open{transform:none; opacity:1; pointer-events:auto}
     .drawer a{padding:12px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.03)}
 
-    /* HERO */
     .hero{position:relative; min-height:var(--hero-h); padding:90px 0; overflow:hidden}
     .hero-3d{
        position:absolute; inset:0; z-index:1;
        transform: translateX(var(--viewer-shift)) scale(var(--viewer-scale));
        transform-origin: center left;}
-    
-    .hero-3d::part(scene){ 
-      image-rendering: auto;
-    }
+    .hero-3d::part(scene){ image-rendering:auto; }
 
     .hero-inner{position:relative; z-index:2}
     .hero-grid{display:grid; grid-template-columns: 1.1fr 0.9fr; gap:32px; align-items:center}
@@ -107,107 +100,59 @@
     .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
     .cta-row{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
 
-    /* Sections */
     h2{font-size:2rem; margin-bottom:16px}
     .card{border:1px solid var(--border);border-radius:var(--radius);
       background:var(--card);box-shadow:var(--shadow); padding:18px}
 
-    /* Work */
-    .work{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-    .media{aspect-ratio:16/10;border-bottom:1px solid var(--border);
-      background:linear-gradient(135deg, rgba(124,58,237,.20), rgba(219,39,119,.18))}
-
-    /* Process slider */
-    .process-wrap{position:relative}
-    .process-slider{
-      display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory;
-      -webkit-overflow-scrolling:touch; padding-bottom:8px;
+    /* Contact (replaces "work") */
+    .contact-grid{grid-template-columns: 1fr 1fr}
+    .contact-list p{margin:.25rem 0}
+    .contact-list a{color:#fff;text-decoration:underline}
+    .form-row{display:flex; gap:12px}
+    .field{display:flex; flex-direction:column; gap:6px; margin-bottom:12px}
+    .field label{font-weight:600}
+    .field input,.field textarea{
+      width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--border);
+      background:rgba(255,255,255,.04); color:#fff; outline:none
     }
-    .process-slider::-webkit-scrollbar{height:8px}
-    .process-slider::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:8px}
-    .slide{min-width:260px; scroll-snap-align:start}
-    .process-nav{display:flex; gap:8px; justify-content:flex-end; margin-top:10px}
-    .process-nav button{
-      width:38px;height:38px;border-radius:10px;border:1px solid var(--border);
-      background:rgba(255,255,255,.05); color:#fff; cursor:pointer
-    }
+    .field textarea{min-height:140px; resize:vertical}
 
-    /* Pricing */
+    /* Pricing grid reuse */
     .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
     .price .big{font-size:32px;font-weight:800;margin:6px 0}
     .price ul{margin:12px 0 0; padding-left:18px}
 
     footer{padding:40px 0;color:var(--muted);border-top:1px solid var(--border);margin-top:40px;text-align:center}
 
-@media (min-width: 981px){
+    @media (min-width:981px){
+      :root { --viewer-shift: 22vw; }     
+      .hero-3d { transform-origin: center right; }
+      .hero .container{ padding-right: var(--space); }
+      .hero-grid{ grid-template-columns: 1.2fr 0.8fr; }
+      .hero-content{ grid-column: 1; max-width: 720px; padding-left: 0; padding-right: clamp(12px, 3vw, 40px); text-align: left; }
+      .hero-spacer{ grid-column: 2; }
+    }
 
-  :root { --viewer-shift: 22vw; }     
-  .hero-3d { transform-origin: center right; }
-
-  .hero .container{ padding-right: var(--space); }
-
-  .hero-grid{ grid-template-columns: 1.2fr 0.8fr; }
-
-  .hero-content{
-    grid-column: 1;
-    max-width: 720px;
-    padding-left: 0;
-    padding-right: clamp(12px, 3vw, 40px);
-    text-align: left;
-  }
-
-  .hero-spacer{ grid-column: 2; }
-}
-
-    /* Responsive */
-  @media (max-width: 980px){
-  /* Nav */
-  .links,.nav-cta{display:none}
-  .burger{display:flex}
-
-  /* Sections: padding من الجوانب باش مايلسقوش */
-  .section{ padding: 60px var(--space); }
-
-  /* HERO: النص يبقى فوق داخل الcontainer */
-  .hero{
-    padding: 60px 0;
-    min-height: unset;
-    overflow: visible; /* باش الروبوت يقدر يخرج full-bleed */
-  }
-  .hero-grid{ grid-template-columns: 1fr; gap: 22px; }
-  .hero-content{
-    margin: 0 auto;
-    text-align: center;
-    pointer-events: auto;
-    max-width: 680px;
-    padding: 0 var(--space);
-  }
-
-  /* === الروبوت تحت النص و full-bleed خارج الcontainer === */
-  .hero-3d{
-    position: relative !important;   /* مهم باش نقدر نحركو بالleft */
-    display: block;
-    width: 100vw;                     /* عرض الشاشة كامل */
-    max-width: none;
-    height: 280px;                    /* صغّر شوية (بدّلها إذا بغيتي) */
-    left: 50%;                        /* وسط الشاشة */
-    transform: translateX(-50%);      /* نحيد تأثير الcontainer */
-    margin: 18px 0 0 0;               /* مسافة بين النص والروبوت */
-    transform-origin: center center;
-  }
-
-  /* باقي الشبكات */
-  .work{grid-template-columns:1fr}
-  .pricing{grid-template-columns:1fr}
-  .price{text-align:center}
-  .process-nav{justify-content:center}
-}
-
+    @media (max-width:980px){
+      .links,.nav-cta{display:none}
+      .burger{display:flex}
+      .section{ padding: 60px var(--space); }
+      .hero{ padding: 60px 0; min-height: unset; overflow: visible; }
+      .hero-grid{ grid-template-columns: 1fr; gap: 22px; }
+      .hero-content{ margin: 0 auto; text-align: center; pointer-events: auto; max-width: 680px; padding: 0 var(--space); }
+      .hero-3d{
+        position: relative !important; display: block; width: 100vw; max-width: none; height: 280px;
+        left: 50%; transform: translateX(-50%); margin: 18px 0 0 0; transform-origin: center center;
+      }
+      .contact-grid{grid-template-columns: 1fr}
+      .form-row{flex-direction:column}
+      .pricing{grid-template-columns:1fr}
+      .price{text-align:center}
+    }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="container nav">
     <div class="brand"><span class="dot" aria-hidden="true"></span><a href="#top">MadeBYilyas</a></div>
@@ -216,9 +161,8 @@
       <a href="#process">Process</a><a href="#pricing">Pricing</a>
       <a href="resume.pdf">Resume</a>
     </nav>
-    <div class="nav-cta"><a href="#contact" class="btn primary pill">Get a quote</a></div>
+    <div class="nav-cta"><a href="#work" class="btn primary pill">Get a quote</a></div>
     <button class="burger" id="burger" aria-label="Menu">
-      <!-- SVG hamburger -->
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
         <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
       </svg>
@@ -228,7 +172,7 @@
     <a href="#work">Work</a><a href="#services">Services</a>
     <a href="#process">Process</a><a href="#pricing">Pricing</a>
     <a href="resume.pdf">Resume</a>
-    <a href="#contact" class="btn primary pill">Get a quote</a>
+    <a href="#work" class="btn primary pill">Get a quote</a>
   </div>
 </header>
 
@@ -236,9 +180,6 @@
 
   <!-- HERO -->
   <section class="hero">
-
-
-    <!-- النص على اليمين -->
     <div class="container hero-inner">
       <div class="hero-grid">
         <div class="hero-spacer"></div>
@@ -252,39 +193,55 @@
             <span class="chip">🧩 From Figma / reference</span>
           </div>
           <div class="cta-row">
-            <a class="btn primary pill" href="#contact">Start a project</a>
+            <a class="btn primary pill" href="#work">Start a project</a>
             <a class="btn pill" href="#work">See recent work</a>
           </div>
         </div>
       </div>
     </div>
-
-                <!-- Viewer يغطي الهيرو كامل (يتبع الماوس فالبانير كامل) -->
     <spline-viewer class="hero-3d"
       url="https://prod.spline.design/NGdpJibjTqrOghDQ/scene.splinecode">
     </spline-viewer>
   </section>
 
-  <!-- WORK -->
+  <!-- CONTACT (replaces "Recent Work") -->
   <section id="work" class="section container">
-    <h2>Recent Work</h2>
-    <p class="muted">Some selected projects that highlight speed, design, and conversions.</p>
-    <div class="work">
-      <article class="card">
-        <div class="media"></div>
-        <h3>Landing Page</h3>
-        <p class="muted">Conversion-focused design, optimized for performance.</p>
-      </article>
-      <article class="card">
-        <div class="media"></div>
-        <h3>E-commerce Optimization</h3>
-        <p class="muted">Boosted LCP from 5.4s → 1.8s with caching & image optimization.</p>
-      </article>
-      <article class="card">
-        <div class="media"></div>
-        <h3>Company Website</h3>
-        <p class="muted">Multi-page responsive site, SEO and analytics ready.</p>
-      </article>
+    <h2>Contact</h2>
+    <p class="muted">Reach out directly or send your idea. I’ll reply with scope, price, and timeline.</p>
+
+    <div class="grid contact-grid">
+      <!-- Contact info -->
+      <div class="card">
+        <h3>Contact info</h3>
+        <div class="contact-list">
+          <p><strong>Name:</strong> Ilyas Jibbou</p>
+          <p><strong>Email:</strong> <a href="mailto:ilyasjibbou02@gmail.com">ilyasjibbou02@gmail.com</a></p>
+          <p><strong>Phone:</strong> <a href="tel:+212770802531">+212 770 802 531</a></p>
+        </div>
+      </div>
+
+      <!-- Contact form -->
+      <div class="card">
+        <h3>Tell me about your ideas</h3>
+        <form id="contactForm">
+          <div class="form-row">
+            <div class="field" style="flex:1">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" placeholder="Your name" required>
+            </div>
+            <div class="field" style="flex:1">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" placeholder="you@example.com" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="message">Project description</label>
+            <textarea id="message" name="message" placeholder="Tell me about your ideas…" required></textarea>
+          </div>
+          <button class="btn primary pill" type="submit">Send</button>
+        </form>
+        <p class="muted" style="margin-top:10px">Or email me directly at <a href="mailto:ilyasjibbou02@gmail.com">ilyasjibbou02@gmail.com</a>.</p>
+      </div>
     </div>
   </section>
 
@@ -298,7 +255,7 @@
     </div>
   </section>
 
-  <!-- PROCESS (Slider) -->
+  <!-- PROCESS -->
   <section id="process" class="section container">
     <h2>Process</h2>
     <div class="process-wrap">
@@ -327,7 +284,7 @@
           <li>From Figma or reference</li>
           <li>Basic SEO</li>
         </ul>
-        <div class="cta" style="margin-top:14px"><a class="btn primary pill" href="#contact">Choose Starter</a></div>
+        <div class="cta" style="margin-top:14px"><a class="btn primary pill" href="#work">Choose Starter</a></div>
       </div>
       <div class="card price" style="text-align:center">
         <h3>Business</h3>
@@ -337,7 +294,7 @@
           <li>Contact form integration</li>
           <li>Performance optimization</li>
         </ul>
-        <div class="cta" style="margin-top:14px"><a class="btn primary pill" href="#contact">Choose Business</a></div>
+        <div class="cta" style="margin-top:14px"><a class="btn primary pill" href="#work">Choose Business</a></div>
       </div>
       <div class="card price" style="text-align:center">
         <h3>Custom</h3>
@@ -347,18 +304,8 @@
           <li>API integrations</li>
           <li>Ongoing support</li>
         </ul>
-        <div class="cta" style="margin-top:14px"><a class="btn primary pill" href="#contact">Tell me your idea</a></div>
+        <div class="cta" style="margin-top:14px"><a class="btn primary pill" href="#work">Tell me your idea</a></div>
       </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact" class="section container">
-    <h2>Let’s build your website</h2>
-    <p class="muted">Send me your Figma or a site you like, and I’ll reply with scope, price and timeline.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
-      <a class="btn primary pill" href="mailto:ilyasjibbou01@gmail.com">Email me</a>
-      <a class="btn pill" href="https://wa.me/212600000000?text=Salam%20Ilyas%2C%20bghit%20website" target="_blank">WhatsApp</a>
     </div>
   </section>
 
@@ -381,6 +328,18 @@
   function slideBy(px){ slider.scrollBy({left:px, behavior:'smooth'}); }
   prev.addEventListener('click', ()=>slideBy(-320));
   next.addEventListener('click', ()=>slideBy(320));
+
+  // Contact form -> mailto
+  const form = document.getElementById('contactForm');
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const msg = document.getElementById('message').value.trim();
+    const subject = encodeURIComponent(`New project inquiry from ${name}`);
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${msg}`);
+    window.location.href = `mailto:ilyasjibbou02@gmail.com?subject=${subject}&body=${body}`;
+  });
 </script>
 </body>
 </html>
